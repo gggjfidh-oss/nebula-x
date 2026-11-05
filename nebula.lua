@@ -1,4 +1,4 @@
--- Nebula X V2.5 // Ultimate Supreme + HitSound & FOV Changer
+-- Nebula X V2.5 // Ultimate Supreme Edition (Full & Final)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -150,7 +150,6 @@ local function addToggle(page, name, callback)
     end)
 end
 
--- Вкладка ESP
 local tabESP = createTab("ESP", "👁️")
 addToggle(tabESP, "Boxes (Подсветка тел)", function(v) Settings.ESP_Boxes = v end)
 addToggle(tabESP, "Chams (Рентген сквозь стены)", function(v) Settings.ESP_Chams = v end)
@@ -160,7 +159,6 @@ addToggle(tabESP, "Health (Здоровье игроков)", function(v) Settin
 addToggle(tabESP, "Distance (Дистанция в метрах)", function(v) Settings.ESP_Distance = v end)
 addToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
 
--- Вкладка AIM (Добавлен HitSound)
 local tabAim = createTab("AIM", "🎯")
 addToggle(tabAim, "Aimbot (Аим по игрокам)", function(v) Settings.Aimbot = v end)
 addToggle(tabAim, "AimBot NPC (Аим по ботам)", function(v) Settings.AimBotNPC = v end)
@@ -203,7 +201,6 @@ fovBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Вкладка UTILS (Добавлен FOV Changer камеры)
 local tabUtils = createTab("UTILS", "⚙️")
 addToggle(tabUtils, "Speedhack (Ускорение бега)", function(v) Settings.Speed = v end)
 
@@ -268,7 +265,6 @@ addToggle(tabUtils, "Infinite Zoom (Бесконечная камера)", funct
 addToggle(tabUtils, "NightVision (Ночное видение)", function(v) Settings.NightVision = v end)
 addToggle(tabUtils, "Fullbright (Яркий свет)", function(v) Settings.Fullbright = v if not v then Lighting.Brightness = 1 Lighting.GlobalShadows = true end end)
 
--- Вкладка EXTRA (Добавлен Anti-Ragdoll)
 local tabExtra = createTab("EXTRA", "📦")
 addToggle(tabExtra, "GodMode (Бессмертие)", function(v) Settings.GodMode = v end)
 addToggle(tabExtra, "Anti-Ragdoll (Защита от падений/сбитий)", function(v) Settings.AntiRagdoll = v end)
@@ -294,7 +290,6 @@ addToggle(tabExtra, "Click TP (Телепорт кликом)", function(v) Sett
 addToggle(tabExtra, "Auto-Clicker (Автокликер)", function(v) Settings.AutoClicker = v end)
 addToggle(tabExtra, "SpinBot (Быстрое вращение)", function(v) Settings.SpinBot = v end)
 
--- Вкладка TP к игрокам
 local tabTP = createTab("TP", "📍")
 local tpScroll = Instance.new("ScrollingFrame", tabTP)
 tpScroll.Size = UDim2.new(1, 0, 1, 0) tpScroll.BackgroundTransparency = 1 tpScroll.CanvasSize = UDim2.new(0, 0, 0, 500) tpScroll.ScrollBarThickness = 3
@@ -387,18 +382,20 @@ RunService.RenderStepped:Connect(function()
         if Settings.Aimbot then
             local t = getClosestPlayer()
             if t and t.Character and t.Character:FindFirstChild("Head") then
-    Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, t.Character.Head.Position), 1 / Settings.Smoothness)
-    if Settings.HitSound then
-        pcall(function()
-            local sound = Instance.new("Sound", workspace)
-            sound.SoundId = "rbxassetid://9069176472"
-            sound.Volume = 1
-            sound:Play()
-            game:GetService("Debris"):AddItem(sound, 1)
-        end)
-    end
-                    end
-                            if Settings.TriggerBot then
+                Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, t.Character.Head.Position), 1 / Settings.Smoothness)
+                if Settings.HitSound then
+                    pcall(function()
+                        local sound = Instance.new("Sound", workspace)
+                        sound.SoundId = "rbxassetid://9069176472"
+                        sound.Volume = 1
+                        sound:Play()
+                        game:GetService("Debris"):AddItem(sound, 1)
+                    end)
+                end
+            end
+        end
+
+        if Settings.TriggerBot then
             local raycastParams = RaycastParams.new()
             raycastParams.FilterType = Enum.RaycastFilterType.Exclude
             raycastParams.FilterDescendantsInstances = {LocalPlayer.Character}
@@ -421,14 +418,6 @@ RunService.RenderStepped:Connect(function()
                                 sound.Volume = 1
                                 sound:Play()
                                 game:GetService("Debris"):AddItem(sound, 1)
-                            end)
-                        end
-                    end
-                end
-            end
-                    end
-                    )
-        game:GetService("Debris"):AddItem(sound, 1)
                             end)
                         end
                     end
@@ -560,4 +549,5 @@ RunService.RenderStepped:Connect(function()
     end)
 end)
 
-print("Nebula X V2.5: Всё загружено и работает!")
+print("Nebula X V2.5: Запущено успешно!")
+
