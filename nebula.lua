@@ -750,40 +750,39 @@ RunService.RenderStepped:Connect(function()
                                 cache.viewAngle.To = Vector2.new(p2.X, p2.Y)
                                 cache.viewAngle.Visible = true
                             else cache.viewAngle.Visible = false end
-                        else cache.viewAngle.Visible = false end
+                                                else cache.viewAngle.Visible = false end
+                    else cache.viewAngle.Visible = false end
 
-                        cache.tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                        cache.tracer.To = Vector2.new(headVector.X, pos.Y + height) cache.tracer.Visible = Settings.ESP_Tracers
+                    cache.tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                    cache.tracer.To = Vector2.new(headVector.X, pos.Y + height) cache.tracer.Visible = Settings.ESP_Tracers
 
-                        if Settings.ESP_Skeleton and char:FindFirstChild("Head") and char:FindFirstChild("UpperTorso") then
-                            (char:FindFirstChild("Head") and char:FindFirstChild("UpperTorso")) then
-                            local function to2D(part) local v, on = Camera:WorldToViewportPoint(part.Position) return Vector2.new(v.X, v.Y), on end
-                            cache.skeleton[1].From = to2D(char.Head) cache.skeleton[1].To = to2D(char.UpperTorso) cache.skeleton[1].Visible = true
-                        else for _, l in pairs(cache.skeleton) do l.Visible = false end end
-                        cache.offscreen.Visible = false
-                    else
-                        cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
-                        for _, l in pairs(cache.skeleton) do l.Visible = false end
-
-                        if Settings.ESP_Offscreen then
-                            local camCFrame = Camera.CFrame
-                            local relPos = camCFrame:VectorToObjectSpace(rootPart.Position - camCFrame.Position)
-                            local angle = math.atan2(relPos.X, relPos.Z)
-                            local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                            local radius = 130
-                            local arrowPos = center + Vector2.new(math.cos(angle - math.pi/2), math.sin(angle - math.pi/2)) * radius
-                            
-                            cache.offscreen.PointA = arrowPos + Vector2.new(12, 12)
-                            cache.offscreen.PointB = arrowPos - Vector2.new(12, 12)
-                            cache.offscreen.PointC = arrowPos + Vector2.new(0, -6)
-                            cache.offscreen.Visible = true
-                        else cache.offscreen.Visible = false end
-                    end
+                    if Settings.ESP_Skeleton and char:FindFirstChild("Head") and char:FindFirstChild("UpperTorso") then
+                        local function to2D(part) local v, on = Camera:WorldToViewportPoint(part.Position) return Vector2.new(v.X, v.Y), on end
+                        cache.skeleton[1].From = to2D(char.Head) cache.skeleton[1].To = to2D(char.UpperTorso) cache.skeleton[1].Visible = true
+                    else for _, l in pairs(cache.skeleton) do l.Visible = false end end
+                    cache.offscreen.Visible = false
                 else
-                    if cache.highlight then cache.highlight:Destroy() cache.highlight = nil end
-                    cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.offscreen.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
+                    cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
                     for _, l in pairs(cache.skeleton) do l.Visible = false end
+
+                    if Settings.ESP_Offscreen then
+                        local camCFrame = Camera.CFrame
+                        local relPos = camCFrame:VectorToObjectSpace(rootPart.Position - camCFrame.Position)
+                        local angle = math.atan2(relPos.X, relPos.Z)
+                        local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                        local radius = 130
+                        local arrowPos = center + Vector2.new(math.cos(angle - math.pi/2), math.sin(angle - math.pi/2)) * radius
+                        
+                        cache.offscreen.PointA = arrowPos + Vector2.new(12, 12)
+                        cache.offscreen.PointB = arrowPos - Vector2.new(12, 12)
+                        cache.offscreen.PointC = arrowPos + Vector2.new(0, -6)
+                        cache.offscreen.Visible = true
+                    else cache.offscreen.Visible = false end
                 end
+            else
+                if cache.highlight then cache.highlight:Destroy() cache.highlight = nil end
+                cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.offscreen.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
+                for _, l in pairs(cache.skeleton) do l.Visible = false end
             end
         end
     end)
