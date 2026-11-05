@@ -6,28 +6,20 @@ local C=workspace.CurrentCamera
 local LP=P.LocalPlayer
 local V=game:GetService("VirtualUser")
 local D=game:GetService("Debris")
-local CG=game:GetService("CoreGui")
+local Stats=game:GetService("Stats")
 
 local S={ESP_Boxes=false,ESP_Chams=false,ESP_Names=false,ESP_Health=false,ESP_Distance=false,ESP_Rainbow=false,ESP_TeamCheck=true,Aimbot=false,AimBotNPC=false,TriggerBot=false,ShowFOV=false,HitBoxExpander=false,WallCheck=false,AimPart="Head",Smoothness=3,FOV=150,GameFOV=70,HitSound=false,Speed=false,SpeedMultiplier=0.6,Jump=false,InfiniteJump=false,Bhop=false,Fly=false,FlySpeed=1,Noclip=false,WaterWalk=false,InfiniteZoom=false,NightVision=false,Freecam=false,GodMode=false,AntiVoid=false,AutoRespawn=false,AntiAFK=true,AntiRagdoll=false,TrueInvis=false,ClickTP=false,AutoClicker=false,SpinBot=false,Fullbright=false}
 
 local FOVC=Drawing.new("Circle")
-FOVC.Visible=false
-FOVC.Transparency=0.7
-FOVC.Thickness=1.5
-FOVC.Color=Color3.fromRGB(220,80,255)
-FOVC.Filled=false
+FOVC.Visible=false FOVC.Transparency=0.7 FOVC.Thickness=1.5 FOVC.Color=Color3.fromRGB(220,80,255) FOVC.Filled=false
 
 local function Drag(o)
     local d,dI,dS,sP
     o.InputBegan:Connect(function(i)
-        if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
-            d=true dS=i.Position sP=o.Position
-        end
+        if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then d=true dS=i.Position sP=o.Position end
     end)
     o.InputChanged:Connect(function(i)
-        if i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch then
-            dI=i
-        end
+        if i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch then dI=i end
     end)
     U.InputChanged:Connect(function(i)
         if i==dI and d then
@@ -36,17 +28,14 @@ local function Drag(o)
         end
     end)
     o.InputEnded:Connect(function(i)
-        if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
-            d=false dI=nil
-        end
+        if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then d=false dI=nil end
     end)
 end
 
 local G=Instance.new("ScreenGui",LP:WaitForChild("PlayerGui"))
 G.Name="NebulaXV2"
 local M=Instance.new("Frame",G)
-M.Size=UDim2.new(0,520,0,390)
-M.Position=UDim2.new(0.5,-260,0.5,-195)
+M.Size=UDim2.new(0,520,0,390) M.Position=UDim2.new(0.5,-260,0.5,-195)
 M.BackgroundColor3=Color3.fromRGB(15,12,25)
 Instance.new("UICorner",M).CornerRadius=UDim.new(0,12)
 Instance.new("UIStroke",M).Color=Color3.fromRGB(220,80,255)
@@ -113,8 +102,7 @@ local function Tog(p,n,k)
     local b=Instance.new("TextButton",p)
     b.Size=UDim2.new(1,-4,0,32) b.BackgroundColor3=Color3.fromRGB(25,20,40)
     b.Text="  "..n..": [OFF]" b.TextColor3=Color3.fromRGB(240,240,255)
-    b.TextSize=10 b.Font=Enum.Font.GothamBold
-    b.TextXAlignment=Enum.TextXAlignment.Left
+    b.TextSize=10 b.Font=Enum.Font.GothamBold b.TextXAlignment=Enum.TextXAlignment.Left
     Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
     local s=Instance.new("UIStroke",b) s.Color=Color3.fromRGB(180,100,255)
     local st=false
@@ -131,8 +119,7 @@ local function Btn(p,t,f)
     local b=Instance.new("TextButton",p)
     b.Size=UDim2.new(1,-4,0,32) b.BackgroundColor3=Color3.fromRGB(35,25,50)
     b.Text="  "..t b.TextColor3=Color3.fromRGB(255,255,255)
-    b.TextSize=10 b.Font=Enum.Font.GothamBold
-    b.TextXAlignment=Enum.TextXAlignment.Left
+    b.TextSize=10 b.Font=Enum.Font.GothamBold b.TextXAlignment=Enum.TextXAlignment.Left
     Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
     b.MouseButton1Click:Connect(f)
 end
@@ -238,11 +225,9 @@ U.InputChanged:Connect(function(i)
     end
 end)
 
-local BV,NPC,NT
+local BV,NPC,NT,lastHit
 LP.Idled:Connect(function()
-    if S.AntiAFK then
-        V:Button2Down(Vector2.new(0,0),C.CFrame) task.wait(1) V:Button2Up(Vector2.new(0,0),C.CFrame)
-    end
+    if S.AntiAFK then V:Button2Down(Vector2.new(0,0),C.CFrame) task.wait(1) V:Button2Up(Vector2.new(0,0),C.CFrame) end
 end)
 
 local Mouse=LP:GetMouse()
@@ -328,9 +313,7 @@ R.RenderStepped:Connect(function(dt)
                 for _,o in ipairs(workspace:GetDescendants()) do
                     if o:IsA("Humanoid") and o.Health>0 then
                         local m=o.Parent
-                        if m and m:IsA("Model") and not P:GetPlayerFromCharacter(m) then
-                            table.insert(NPC,m)
-                        end
+                        if m and m:IsA("Model") and not P:GetPlayerFromCharacter(m) then table.insert(NPC,m) end
                     end
                 end
             end
@@ -356,9 +339,7 @@ R.RenderStepped:Connect(function(dt)
                     end
                 end
             end
-            if ap then
-                C.CFrame=C.CFrame:Lerp(CFrame.new(C.CFrame.Position,ap.Position),1/S.Smoothness)
-            end
+            if ap then C.CFrame=C.CFrame:Lerp(CFrame.new(C.CFrame.Position,ap.Position),1/S.Smoothness) end
         end
 
         if S.TriggerBot then
@@ -386,9 +367,7 @@ R.RenderStepped:Connect(function(dt)
         if ch then
             local hm=ch:FindFirstChildOfClass("Humanoid")
             local rt=ch:FindFirstChild("HumanoidRootPart")
-            if S.Speed and hm and rt and hm.MoveDirection.Magnitude>0 then
-                rt.CFrame=rt.CFrame+hm.MoveDirection*S.SpeedMultiplier
-            end
+            if S.Speed and hm and rt and hm.MoveDirection.Magnitude>0 then rt.CFrame=rt.CFrame+hm.MoveDirection*S.SpeedMultiplier end
             if S.Jump and hm then hm.JumpPower=130 end
             if S.GodMode and hm then hm.Health=math.huge end
             if S.AntiRagdoll and hm then
@@ -446,56 +425,56 @@ R.RenderStepped:Connect(function(dt)
                 elseif hl then hl:Destroy() E_C[p]=nil end
 
                 local bb=B_C[p]
-                ESP_Distance then
-                            if not bb or bb.Parent~=pc then
-                                if bb then bb:Destroy() end
-                                bb=Instance.new("BillboardGui",pc)
-                                bb.Size=UDim2.new(0,200,0,50) bb.StudsOffset=Vector3.new(0,2.5,0) bb.AlwaysOnTop=true
-                                local tx=Instance.new("TextLabel",bb)
-                                tx.Size=UDim2.new(1,0,1,0) tx.BackgroundTransparency=1
-                                tx.TextColor3=Color3.fromRGB(255,255,255) tx.TextStrokeTransparency=0 tx.TextSize=11
-                                B_C[p]=bb T_C[p]=tx
-                            end
-                            local tx=T_C[p]
-                            if tx then
-                                local t=""
-                                if S.ESP_Names then t=t..p.Name.."\n" end
-                                local hm=pc:FindFirstChildOfClass("Humanoid")
-                                if S.ESP_Health and hm then t=t.."HP: "..math.floor(hm.Health).."\n" end
-                                if S.ESP_Distance and LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then
-                                    t=t.."["..math.floor((LP.Character.HumanoidRootPart.Position-pc.Head.Position).Magnitude).."m]"
-                                end
-                                tx.Text=t
-                            end
-                        elseif bb then bb:Destroy() B_C[p]=nil T_C[p]=nil end
+                if S.ESP_Names or S.ESP_Health or S.ESP_Distance then
+                    if not bb or bb.Parent~=pc then
+                        if bb then bb:Destroy() end
+                        bb=Instance.new("BillboardGui",pc)
+                        bb.Size=UDim2.new(0,200,0,50) bb.StudsOffset=Vector3.new(0,2.5,0) bb.AlwaysOnTop=true
+                        local tx=Instance.new("TextLabel",bb)
+                        tx.Size=UDim2.new(1,0,1,0) tx.BackgroundTransparency=1
+                        tx.TextColor3=Color3.fromRGB(255,255,255) tx.TextStrokeTransparency=0 tx.TextSize=11
+                        B_C[p]=bb T_C[p]=tx
                     end
-                end
-
-                for _,p in ipairs(P:GetPlayers()) do
-                    if p~=LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-                        local rp=p.Character.HumanoidRootPart
-                        if S.HitBoxExpander then
-                            if rp.Size~=Vector3.new(5,5,5) then rp.Size=Vector3.new(5,5,5) rp.Transparency=0.5 rp.Color=Color3.fromRGB(255,0,0) end
-                        else
-                            if rp.Size~=Vector3.new(2,2,1) then rp.Size=Vector3.new(2,2,1) rp.Transparency=1 end
+                    local tx=T_C[p]
+                    if tx then
+                        local t=""
+                        if S.ESP_Names then t=t..p.Name.."\n" end
+                        local hm=pc:FindFirstChildOfClass("Humanoid")
+                        if S.ESP_Health and hm then t=t.."HP: "..math.floor(hm.Health).."\n" end
+                        if S.ESP_Distance and LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then
+                            t=t.."["..math.floor((LP.Character.HumanoidRootPart.Position-pc.Head.Position).Magnitude).."m]"
                         end
+                        tx.Text=t
                     end
-                end
+                elseif bb then bb:Destroy() B_C[p]=nil T_C[p]=nil end
+            end
+        end
 
-                if S.TrueInvis then
-                    local ch=LP.Character
-                    if ch then
-                        for _,pr in ipairs(ch:GetDescendants()) do
-                            if (pr:IsA("BasePart") or pr:IsA("Decal")) and not I_C[pr] then
-                                I_C[pr]=pr.Transparency pr.Transparency=1
-                            end
-                        end
-                    end
+        for _,p in ipairs(P:GetPlayers()) do
+            if p~=LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                local rp=p.Character.HumanoidRootPart
+                if S.HitBoxExpander then
+                    if rp.Size~=Vector3.new(5,5,5) then rp.Size=Vector3.new(5,5,5) rp.Transparency=0.5 rp.Color=Color3.fromRGB(255,0,0) end
                 else
-                    for pr,tr in pairs(I_C) do
-                        if pr and pr.Parent then pr.Transparency=tr end
-                    end
-                    I_C={}
+                    if rp.Size~=Vector3.new(2,2,1) then rp.Size=Vector3.new(2,2,1) rp.Transparency=1 end
                 end
-            end)
-        end)
+            end
+        end
+
+        if S.TrueInvis then
+            local ch=LP.Character
+            if ch then
+                for _,pr in ipairs(ch:GetDescendants()) do
+                    if (pr:IsA("BasePart") or pr:IsA("Decal")) and not I_C[pr] then
+                        I_C[pr]=pr.Transparency pr.Transparency=1
+                    end
+                end
+            end
+        else
+            for pr,tr in pairs(I_C) do
+                if pr and pr.Parent then pr.Transparency=tr end
+            end
+            I_C={}
+        end
+    end)
+end)
