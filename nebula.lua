@@ -93,33 +93,42 @@ local function MakeTab(name)
     btn.MouseButton1Click:Connect(function()
         for _, p in pairs(Pages) do p.Visible = false end
         page.Visible = true
-        for _, b in pairs(TabBar:GetChildren()) do if b:IsA("TextButton") then b.TextColor3 = Color3.fromRGB(200, 200, 200) b.BackgroundColor3 = Color3.fromRGB(30, 30, 45) end end
-        btn.TextColor3 = Color3.fromRGB(255, 255, 255) btn.BackgroundColor3 = Color3.fromRGB(147, 112, 219)
-    end)
-    Pages[name] = page return page
-end
-
-local function AddToggle(page, name, key, cb)
-    local btn = Create("TextButton", {Parent = page, Size = UDim2.new(1, -5, 0, 35), BackgroundColor3 = Color3.fromRGB(28, 28, 38), Text = "", AutoButtonColor = false})
-    Create("UICorner", {Parent = btn, CornerRadius = UDim.new(0, 6)})
-    Create("UIStroke", {Parent = btn, Color = Color3.fromRGB(45, 45, 60), Thickness = 1})
-    Create("TextLabel", {Parent = btn, Size = UDim2.new(1, -60, 1, 0), Position = UDim2.new(0, 10, 0, 0), BackgroundTransparency = 1, Text = name, TextColor3 = Color3.fromRGB(220, 220, 230), TextSize = 11, Font = Enum.Font.GothamSemibold, TextXAlignment = Enum.TextXAlignment.Left})
-    local switch = Create("Frame", {Parent = btn, Size = UDim2.new(0, 35, 0, 18), Position = UDim2.new(1, -45, 0.5, -9), BackgroundColor3 = Color3.fromRGB(50, 50, 65)})
-    Create("UICorner", {Parent = switch, CornerRadius = UDim.new(1, 0)})
-    local circle = Create("Frame", {Parent = switch, Size = UDim2.new(0, 14, 0, 14), Position = UDim2.new(0, 2, 0.5, -7), BackgroundColor3 = Color3.fromRGB(150, 150, 160)})
-    Create("UICorner", {Parent = circle, CornerRadius = UDim.new(1, 0)})
-    local state = false
-    btn.MouseButton1Click:Connect(function()
-        state = not state Settings[key] = state
-        if state then
-            switch.BackgroundColor3 = Color3.fromRGB(147, 112, 219) circle.Position = UDim2.new(1, -16, 0.5, -7) circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        else
-            switch.BackgroundColor3 = Color3.fromRGB(50, 50, 65) circle.Position = UDim2.new(0, 2, 0.5, -7) circle.BackgroundColor3 = Color3.fromRGB(150, 150, 160)
+                for _, p in ipairs(P:GetPlayers()) do
+            if p ~= LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                local rp = p.Character.HumanoidRootPart
+                if Settings.HitBoxExpander then
+                    if rp.Size ~= Vector3.new(6, 6, 6) then 
+                        rp.Size = Vector3.new(6, 6, 6) 
+                        rp.Transparency = 0.5 
+                        rp.Color = Color3.fromRGB(255, 0, 0) 
+                    end
+                else
+                    if rp.Size ~= Vector3.new(2, 2, 1) then 
+                        rp.Size = Vector3.new(2, 2, 1) 
+                        rp.Transparency = 1 
+                    end
+                end
+            end
         end
-        if key == "Aimbot" then AimStroke.Color = state and Color3.fromRGB(0, 255, 120) or Color3.fromRGB(255, 60, 80) end
-        if cb then cb(state) end
+
+        if Settings.TrueInvis then
+            local ch = LP.Character
+            if ch then 
+                for _, pr in ipairs(ch:GetDescendants()) do 
+                    if (pr:IsA("BasePart") or pr:IsA("Decal")) and not I_C[pr] then 
+                        I_C[pr] = pr.Transparency 
+                        pr.Transparency = 1 
+                    end 
+                end 
+            end
+        else
+            for pr, tr in pairs(I_C) do 
+                if pr and pr.Parent then pr.Transparency = tr end 
+            end 
+            I_C = {}
+        end
     end)
-end
+end)
 
 local function AddCounter(page, name, initialValue, min, max, step, cb)
     local frame = Create("Frame", {Parent = page, Size = UDim2.new(1, -5, 0, 35), BackgroundColor3 = Color3.fromRGB(28, 28, 38)})
