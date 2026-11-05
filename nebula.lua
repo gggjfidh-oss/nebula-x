@@ -1,4 +1,4 @@
--- Nebula X v49.4 Elite (Full Features Mobile Stable Version)
+-- Nebula X v49.4 Elite (Full Ultimate Version)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -16,7 +16,7 @@ local Settings = {
     Aimbot = false, AimBotNPC = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, AimPart = "Head", Smoothness = 3, FOV = 130,
     SpeedEnabled = false, SpeedValue = 28, JumpPowerEnabled = false, JumpPowerValue = 70,
     FlyEnabled = false, FlySpeed = 50, InfiniteJump = false, Noclip = false,
-    GodMode = false, AntiVoid = false, ClickTP = false, Fullbright = false, RGBMenu = false
+    GodMode = false, AntiVoid = false, ClickTP = false, Fullbright = false, RGBMenu = false, AutoHeal = false, AntiAFK = true
 }
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -26,8 +26,8 @@ if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("Player
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 520, 0, 350)
-MainFrame.Position = UDim2.new(0.5, -260, 0.5, -175)
+MainFrame.Size = UDim2.new(0, 520, 0, 360)
+MainFrame.Position = UDim2.new(0.5, -260, 0.5, -180)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 12, 25)
 MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
@@ -38,7 +38,7 @@ local MainStroke = Instance.new("UIStroke", MainFrame)
 MainStroke.Thickness = 2
 MainStroke.Color = Color3.fromRGB(220, 80, 255)
 
--- Кнопка открытия/скрытия меню ("N")
+-- Кнопка сворачивания/открытия ("N")
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
@@ -147,7 +147,7 @@ local pages = {}
 local function createTab(name, iconText, tabColor)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.new(1, 0, 1, 0) page.BackgroundTransparency = 1 page.Visible = false
-    page.CanvasSize = UDim2.new(0, 0, 0, 800) page.ScrollBarThickness = 3 page.Parent = Container
+    page.CanvasSize = UDim2.new(0, 0, 0, 900) page.ScrollBarThickness = 3 page.Parent = Container
     
     local listLayout = Instance.new("UIListLayout", page)
     listLayout.Padding = UDim.new(0, 6)
@@ -184,7 +184,7 @@ end)
 pages["HOME"] = tabHome
 
 local NewsBox = Instance.new("Frame")
-NewsBox.Size = UDim2.new(1, -4, 0, 210) NewsBox.Position = UDim2.new(0, 0, 0, 5)
+NewsBox.Size = UDim2.new(1, -4, 0, 220) NewsBox.Position = UDim2.new(0, 0, 0, 5)
 NewsBox.BackgroundColor3 = Color3.fromRGB(22, 18, 35) NewsBox.Parent = tabHome
 Instance.new("UICorner", NewsBox).CornerRadius = UDim.new(0, 8)
 local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB(220, 80, 255) nStroke.Thickness = 1.5
@@ -192,7 +192,7 @@ local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB
 local NewsText = Instance.new("TextLabel")
 NewsText.Size = UDim2.new(1, -16, 1, -16) NewsText.Position = UDim2.new(0, 8, 0, 8)
 NewsText.BackgroundTransparency = 1 
-NewsText.Text = "• [v49.4 Elite] Полный функционал восстановлен!\n• 🎯 Кнопка Аима по игрокам (Зеленая)\n• 🤖 Кнопка Аима по ботам/NPC (Оранжевая)\n• 'N' — скрыть/показать меню\n• Статус: Стабильно & Обход"
+NewsText.Text = "• [v49.4 Elite] Все функции активированы!\n• 🎯 Зеленая кнопка — аим по игрокам\n• 🤖 Оранжевая кнопка — аим по ботам\n• 'N' — скрыть/показать меню\n• Полная поддержка ESP, Teleport & Utils"
 NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 10.5 NewsText.Font = Enum.Font.GothamMedium
 NewsText.TextXAlignment = Enum.TextXAlignment.Left NewsText.TextYAlignment = Enum.TextYAlignment.Top
 NewsText.TextWrapped = true NewsText.Parent = NewsBox
@@ -230,8 +230,8 @@ end
 
 -- Вкладка ESP
 local tabESP = createTab("ESP", "👁️", Color3.fromRGB(15, 75, 45))
-createToggle(tabESP, "Boxes (Рамки ESP)", function(v) Settings.ESP_Boxes = v end)
-createToggle(tabESP, "Names (Имена игроков)", function(v) Settings.ESP_Names = v end)
+createToggle(tabESP, "Boxes (Рамки)", function(v) Settings.ESP_Boxes = v end)
+createToggle(tabESP, "Names (Имена)", function(v) Settings.ESP_Names = v end)
 createToggle(tabESP, "Health (Здоровье)", function(v) Settings.ESP_Health = v end)
 createToggle(tabESP, "Distance (Дистанция)", function(v) Settings.ESP_Distance = v end)
 createToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
@@ -283,18 +283,18 @@ refreshPlayerList()
 
 -- Вкладка UTILS
 local tabUtils = createTab("UTILS", "⚙️", Color3.fromRGB(20, 40, 90))
-createToggle(tabUtils, "Speedhack (Ускорение)", function(v) Settings.SpeedEnabled = v end)
-createToggle(tabUtils, "JumpPower (Высокий прыжок)", function(v) Settings.JumpPowerEnabled = v end)
+createToggle(tabUtils, "Speedhack", function(v) Settings.SpeedEnabled = v end)
+createToggle(tabUtils, "JumpPower", function(v) Settings.JumpPowerEnabled = v end)
 createToggle(tabUtils, "Fly (Полет)", function(v) Settings.FlyEnabled = v end)
-createToggle(tabUtils, "Infinite Jump (Беск. прыжки)", function(v) Settings.InfiniteJump = v end)
-createToggle(tabUtils, "Noclip (Сквозь стены)", function(v) Settings.Noclip = v end)
-createToggle(tabUtils, "Fullbright (Яркий свет)", function(v) Settings.Fullbright = v if not v then Lighting.Brightness = 1 Lighting.GlobalShadows = true end end)
+createToggle(tabUtils, "Infinite Jump", function(v) Settings.InfiniteJump = v end)
+createToggle(tabUtils, "Noclip", function(v) Settings.Noclip = v end)
+createToggle(tabUtils, "Fullbright", function(v) Settings.Fullbright = v if not v then Lighting.Brightness = 1 Lighting.GlobalShadows = true end end)
 
 -- Вкладка EXTRA
 local tabExtra = createTab("EXTRA", "📦", Color3.fromRGB(100, 45, 15))
 createToggle(tabExtra, "GodMode (Бессмертие)", function(v) Settings.GodMode = v end)
-createToggle(tabExtra, "Anti-Void (Спастись от падения)", function(v) Settings.AntiVoid = v end)
-createToggle(tabExtra, "Click TP (Телепорт кликом)", function(v) Settings.ClickTP = v end)
+createToggle(tabExtra, "Anti-Void", function(v) Settings.AntiVoid = v end)
+createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
@@ -354,11 +354,11 @@ local function getClosestNPC()
     return target
 end
 
--- Простой и надежный ESP через стандартные UI элементы / Highlight
-local activeHighlights = {}
+-- Визуальный ESP (через BillboardGui / Highlight для полной стабильности в Delta)
+local espCache = {}
 RunService.RenderStepped:Connect(function()
     pcall(function()
-        -- Аим по игрокам
+        -- Аим
         if Settings.Aimbot then
             local t = getClosestPlayer()
             if t and t.Character and t.Character:FindFirstChild(Settings.AimPart) then
@@ -366,7 +366,6 @@ RunService.RenderStepped:Connect(function()
             end
         end
 
-        -- Аим по ботам
         if Settings.AimBotNPC then
             local npcPart = getClosestNPC()
             if npcPart then
@@ -374,7 +373,7 @@ RunService.RenderStepped:Connect(function()
             end
         end
 
-        -- Утилиты персонажа
+        -- Персонаж
         local char = LocalPlayer.Character
         if char then
             local hum = char:FindFirstChildOfClass("Humanoid")
@@ -383,16 +382,9 @@ RunService.RenderStepped:Connect(function()
             if Settings.SpeedEnabled and hum and root and hum.MoveDirection.Magnitude > 0 then
                 root.CFrame = root.CFrame + (hum.MoveDirection * 0.5)
             end
-            if Settings.JumpPowerEnabled and hum then
-                hum.JumpPower = 100
-            end
-            if Settings.GodMode and hum then
-                hum.MaxHealth = math.huge
-                hum.Health = math.huge
-            end
-            if Settings.AntiVoid and root and root.Position.Y < -50 then
-                root.CFrame = root.CFrame + Vector3.new(0, 100, 0)
-            end
+            if Settings.JumpPowerEnabled and hum then hum.JumpPower = 100 end
+            if Settings.GodMode and hum then hum.MaxHealth = math.huge hum.Health = math.huge end
+            if Settings.AntiVoid and root and root.Position.Y < -50 then root.CFrame = root.CFrame + Vector3.new(0, 100, 0) end
             if Settings.Noclip then
                 for _, part in pairs(char:GetDescendants()) do
                     if part:IsA("BasePart") then part.CanCollide = false end
@@ -404,6 +396,29 @@ RunService.RenderStepped:Connect(function()
             Lighting.Brightness = 2
             Lighting.ClockTime = 14
             Lighting.GlobalShadows = false
+        end
+
+        -- Подсветка игроков (ESP Highlight)
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p ~= LocalPlayer and p.Character then
+                local pChar = p.Character
+                local hum = pChar:FindFirstChildOfClass("Humanoid")
+                if Settings.ESP_Boxes or Settings.ESP_Names then
+                    if not espCache[p] then
+                        local hl = Instance.new("Highlight")
+                        hl.Adornee = pChar
+                        hl.FillTransparency = 0.5
+                        hl.OutlineColor = Color3.fromRGB(220, 80, 255)
+                        hl.Parent = pChar
+                        espCache[p] = hl
+                    end
+                else
+                    if espCache[p] then
+                        espCache[p]:Destroy()
+                        espCache[p] = nil
+                    end
+                end
+            end
         end
 
         -- Хитбоксы
@@ -422,4 +437,4 @@ RunService.RenderStepped:Connect(function()
     end)
 end)
 
-print("Nebula X v49.4 Elite: Полный функционал загружен и работает!")
+print("Nebula X v49.4 Elite: Все
