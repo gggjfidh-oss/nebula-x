@@ -1,4 +1,4 @@
--- Nebula X Hub v43 (Secure Part 1 of 3)
+-- Nebula X Hub v45 (Part 1 of 3 - Ultimate Mobile Edition)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -15,7 +15,7 @@ local Settings = {
     ESP_Health = false, ESP_Distance = false, ESP_Weapon = false,
     ESP_Tracers = false, ESP_Offscreen = false, ESP_Skeleton = false, ESP_HeadDot = false, ESP_Chams = false, ESP_RainbowChams = false, ESP_ViewAngle = false, ESP_TeamCheck = true,
     Aimbot = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, Prediction = false, SilentAim = false, AimPart = "Head", Smoothness = 6,
-    ShowFOV = false, FOV = 120, SpeedEnabled = false, SpeedValue = 32,
+    ShowFOV = false, FOV = 120, SpeedEnabled = false, SpeedValue = 32, JumpPowerEnabled = false, JumpPowerValue = 80,
     FlyEnabled = false, FlySpeed = 50, InfiniteJump = false, SuperJump = false, Bhop = false, Noclip = false,
     Freecam = false, SpinBot = false, KillAura = false, AutoEquip = false, AutoRespawn = false, AutoHeal = false, AutoReload = false, GhostMode = false, 
     GodMode = false, AntiVoid = false, ClickTP = false, InfStamina = false, 
@@ -24,7 +24,7 @@ local Settings = {
 }
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "NebulaXHubSecure"
+ScreenGui.Name = "NebulaXHubUltimate"
 pcall(function() ScreenGui.Parent = game.CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -110,7 +110,7 @@ end)
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 12, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "✨ NEBULA X // V43 (Secure)"
+Title.BackgroundTransparency = 1 Title.Text = "✨ NEBULA X // V45 ULTIMATE"
 Title.TextColor3 = Color3.fromRGB(220, 190, 255) Title.TextSize = 12 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
 
@@ -188,7 +188,7 @@ local function createTab(name, tabColor)
     pages[name] = page
     return page
 end
--- Nebula X Hub v43 (Part 2 of 3)
+-- Nebula X Hub v45 (Part 2 of 3)
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 400) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
@@ -212,14 +212,14 @@ local nStroke = Instance.new("UIStroke", NoticeBox) nStroke.Color = Color3.fromR
 
 local NoticeTitle = Instance.new("TextLabel")
 NoticeTitle.Size = UDim2.new(1, 0, 0, 28) NoticeTitle.Position = UDim2.new(0, 0, 0, 5)
-NoticeTitle.BackgroundTransparency = 1 NoticeTitle.Text = "🛡️ ЗАЩИТА АКТИВНА"
+NoticeTitle.BackgroundTransparency = 1 NoticeTitle.Text = "🚀 ULTIMATE EDITION"
 NoticeTitle.TextColor3 = Color3.fromRGB(0, 255, 120) NoticeTitle.TextSize = 12 NoticeTitle.Font = Enum.Font.GothamBold
 NoticeTitle.Parent = NoticeBox
 
 local NoticeText = Instance.new("TextLabel")
 NoticeText.Size = UDim2.new(1, -16, 1, -35) NoticeText.Position = UDim2.new(0, 8, 0, 32)
 NoticeText.BackgroundTransparency = 1 
-NoticeText.Text = "• Версия: v43 (Secure Anti-Ban)\n• Интегрированы безопасные обходы детекта и обработчики ошибок pcall."
+NoticeText.Text = "• Версия: v45 Ultimate\n• Добавлены гибкие настройки скорости, прыжка, хитбоксов и улучшенный интерфейс."
 NoticeText.TextColor3 = Color3.fromRGB(210, 210, 240) NoticeText.TextSize = 10 NoticeText.Font = Enum.Font.GothamMedium
 NoticeText.TextXAlignment = Enum.TextXAlignment.Left NoticeText.TextYAlignment = Enum.TextYAlignment.Top
 NoticeText.TextWrapped = true NoticeText.Parent = NoticeBox
@@ -303,7 +303,7 @@ createToggle(tabAim, "Aimbot", function(v) Settings.Aimbot = v end)
 createToggle(tabAim, "Silent Aim", function(v) Settings.SilentAim = v end)
 createToggle(tabAim, "TriggerBot", function(v) Settings.TriggerBot = v end)
 createToggle(tabAim, "HitBox Expander", function(v) Settings.HitBoxExpander = v end)
-createValueAdjuster(tabAim, "HitBox Size", 2, 8, 1, 4, function(v) Settings.HitBoxSize = v end)
+createValueAdjuster(tabAim, "HitBox Size", 2, 12, 1, 4, function(v) Settings.HitBoxSize = v end)
 createToggle(tabAim, "WallCheck", function(v) Settings.WallCheck = v end)
 createToggle(tabAim, "Prediction", function(v) Settings.Prediction = v end)
 createToggle(tabAim, "Show FOV", function(v) Settings.ShowFOV = v end)
@@ -323,7 +323,9 @@ end)
 local tabUtils = createTab("UTILS", Color3.fromRGB(25, 45, 100))
 createToggle(tabUtils, "RGB Menu", function(v) Settings.RGBMenu = v end)
 createToggle(tabUtils, "Speed", function(v) Settings.SpeedEnabled = v if not v and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then pcall(function() LocalPlayer.Character.Humanoid.WalkSpeed = 16 end) end end)
-createValueAdjuster(tabUtils, "Speed Val", 16, 120, 4, 32, function(v) Settings.SpeedValue = v end)
+createValueAdjuster(tabUtils, "Speed Val", 16, 150, 5, 32, function(v) Settings.SpeedValue = v end)
+createToggle(tabUtils, "JumpPower", function(v) Settings.JumpPowerEnabled = v end)
+createValueAdjuster(tabUtils, "Jump Val", 50, 250, 10, 80, function(v) Settings.JumpPowerValue = v end)
 createToggle(tabUtils, "Fly", function(v) Settings.FlyEnabled = v end)
 createValueAdjuster(tabUtils, "Fly Spd", 20, 200, 10, 50, function(v) Settings.FlySpeed = v end)
 createToggle(tabUtils, "Infinite Jump", function(v) Settings.InfiniteJump = v end)
@@ -355,7 +357,7 @@ createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
--- Nebula X Hub v43 (Part 3 of 3)
+-- Nebula X Hub v45 (Part 3 of 3)
 UserInputService.JumpRequest:Connect(function()
     pcall(function()
         if Settings and Settings.InfiniteJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
@@ -397,7 +399,14 @@ task.spawn(function()
             local root = char:FindFirstChild("HumanoidRootPart")
 
             if Settings and hum then
-                if Settings.SuperJump then hum.JumpPower = 100 else hum.JumpPower = 50 end
+                if Settings.JumpPowerEnabled then
+                    hum.UseJumpPower = true
+                    hum.JumpPower = Settings.JumpPowerValue
+                elseif Settings.SuperJump then
+                    hum.JumpPower = 100
+                else
+                    hum.JumpPower = 50
+                end
                 if Settings.AutoHeal then hum.Health = hum.MaxHealth end
                 if Settings.GodMode then hum.MaxHealth = math.huge hum.Health = math.huge end
             end
@@ -488,18 +497,27 @@ local function isTeammate(p)
     return false
 end
 
+local function isVisible(part, targetChar)
+    if not Settings.WallCheck then return true end
+    local origin = Camera.CFrame.Position
+    local direction = (part.Position - origin)
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+    raycastParams.FilterDescendantsInstances = {LocalPlayer.Character, targetChar}
+    raycastParams.IgnoreWater = true
+    
+    local result = workspace:Raycast(origin, direction, raycastParams)
+    return result == nil
+end
+
 local function getClosestPlayer()
     local target, shortest = nil, Settings.FOV
     for _, p in ipairs(Players:GetPlayers()) do
         pcall(function()
             if p ~= LocalPlayer and not isTeammate(p) and p.Character and p.Character:FindFirstChild(Settings.AimPart) then
                 local part = p.Character[Settings.AimPart]
-                if Settings.WallCheck then
-                    local origin = Camera.CFrame.Position
-                    local ray = Ray.new(origin, (part.Position - origin).Unit * 500)
-                    local hit = workspace:FindPartOnRayWithIgnoreList(ray, {LocalPlayer.Character, p.Character})
-                    if hit then return end
-                end
+                if not isVisible(part, p.Character) then return end
+                
                 local pos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 if onScreen then
                     local dist = (Vector2.new(pos.X, pos.Y) - Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)).Magnitude
@@ -699,4 +717,4 @@ RunService.RenderStepped:Connect(function()
 end)
 
 Players.PlayerRemoving:Connect(removeESP)
-print("Nebula X v43: Защита и обход античита активированы!")
+print("Nebula X v45 Ultimate: Все функции загружены и полностью активны!")
