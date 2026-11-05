@@ -502,7 +502,7 @@ R.RenderStepped:Connect(function(dt)
             end
         end
 
-                if Settings.TrueInvis then
+                        if Settings.TrueInvis then
             local ch = LP.Character
             if ch then 
                 for _, pr in ipairs(ch:GetDescendants()) do 
