@@ -388,7 +388,7 @@ R.RenderStepped:Connect(function(dt)
             end
         end
 
-        local ch = LP.Character
+                local ch = LP.Character
         if ch then
             local hm = ch:FindFirstChildOfClass("Humanoid")
             local rt = ch:FindFirstChild("HumanoidRootPart")
@@ -511,21 +511,11 @@ R.RenderStepped:Connect(function(dt)
             end
         end
 
-                        if Settings.TrueInvis then
+        if Settings.TrueInvis then
             local ch = LP.Character
-            if ch then 
-                for _, pr in ipairs(ch:GetDescendants()) do 
-                    if (pr:IsA("BasePart") or pr:IsA("Decal")) and not I_C[pr] then 
-                        I_C[pr] = pr.Transparency 
-                        pr.Transparency = 1 
-                    end 
-                end 
-            end
+            if ch then for _, pr in ipairs(ch:GetDescendants()) do if (pr:IsA("BasePart") or pr:IsA("Decal")) and not I_C[pr] then I_C[pr] = pr.Transparency pr.Transparency = 1 end end end
         else
-            for pr, tr in pairs(I_C) do 
-                if pr and pr.Parent then pr.Transparency = tr end 
-            end 
-            I_C = {}
+            for pr, tr in pairs(I_C) do if pr and pr.Parent then pr.Transparency = tr end end I_C = {}
         end
     end)
 end)
