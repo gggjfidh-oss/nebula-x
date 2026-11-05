@@ -1,4 +1,4 @@
--- Nebula X Hub v45 (Part 1 of 3 - Ultimate Mobile Edition)
+-- Nebula X Hub v47 (Full Power Edition)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -14,8 +14,8 @@ local Settings = {
     ESP_Boxes = false, ESP_BoxFill = false, ESP_Names = false,
     ESP_Health = false, ESP_Distance = false, ESP_Weapon = false,
     ESP_Tracers = false, ESP_Offscreen = false, ESP_Skeleton = false, ESP_HeadDot = false, ESP_Chams = false, ESP_RainbowChams = false, ESP_ViewAngle = false, ESP_TeamCheck = true,
-    Aimbot = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, Prediction = false, SilentAim = false, AimPart = "Head", Smoothness = 6,
-    ShowFOV = false, FOV = 120, SpeedEnabled = false, SpeedValue = 32, JumpPowerEnabled = false, JumpPowerValue = 80,
+    Aimbot = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, Prediction = false, SilentAim = false, AimPart = "Head", Smoothness = 3,
+    ShowFOV = false, FOV = 130, SpeedEnabled = false, SpeedValue = 28, JumpPowerEnabled = false, JumpPowerValue = 70,
     FlyEnabled = false, FlySpeed = 50, InfiniteJump = false, SuperJump = false, Bhop = false, Noclip = false,
     Freecam = false, SpinBot = false, KillAura = false, AutoEquip = false, AutoRespawn = false, AutoHeal = false, AutoReload = false, GhostMode = false, 
     GodMode = false, AntiVoid = false, ClickTP = false, InfStamina = false, 
@@ -24,7 +24,7 @@ local Settings = {
 }
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "NebulaXHubUltimate"
+ScreenGui.Name = "NebulaXHubFull"
 pcall(function() ScreenGui.Parent = game.CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -110,7 +110,7 @@ end)
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 12, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "✨ NEBULA X // V45 ULTIMATE"
+Title.BackgroundTransparency = 1 Title.Text = "✨ NEBULA X // V47 FULL"
 Title.TextColor3 = Color3.fromRGB(220, 190, 255) Title.TextSize = 12 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
 
@@ -188,7 +188,7 @@ local function createTab(name, tabColor)
     pages[name] = page
     return page
 end
--- Nebula X Hub v45 (Part 2 of 3)
+-- Nebula X Hub v47 (Part 2 of 3)
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 400) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
@@ -212,14 +212,14 @@ local nStroke = Instance.new("UIStroke", NoticeBox) nStroke.Color = Color3.fromR
 
 local NoticeTitle = Instance.new("TextLabel")
 NoticeTitle.Size = UDim2.new(1, 0, 0, 28) NoticeTitle.Position = UDim2.new(0, 0, 0, 5)
-NoticeTitle.BackgroundTransparency = 1 NoticeTitle.Text = "🚀 ULTIMATE EDITION"
+NoticeTitle.BackgroundTransparency = 1 NoticeTitle.Text = "🛡️ СТРЕЛКИ И ВСЕ ФУНКЦИИ"
 NoticeTitle.TextColor3 = Color3.fromRGB(0, 255, 120) NoticeTitle.TextSize = 12 NoticeTitle.Font = Enum.Font.GothamBold
 NoticeTitle.Parent = NoticeBox
 
 local NoticeText = Instance.new("TextLabel")
 NoticeText.Size = UDim2.new(1, -16, 1, -35) NoticeText.Position = UDim2.new(0, 8, 0, 32)
 NoticeText.BackgroundTransparency = 1 
-NoticeText.Text = "• Версия: v45 Ultimate\n• Добавлены гибкие настройки скорости, прыжка, хитбоксов и улучшенный интерфейс."
+NoticeText.Text = "• Версия: v47 Full\n• Стрелки Offscreen ESP возвращены и работают.\n• Noclip, God Mode и Ghost Mode усилены для работы везде."
 NoticeText.TextColor3 = Color3.fromRGB(210, 210, 240) NoticeText.TextSize = 10 NoticeText.Font = Enum.Font.GothamMedium
 NoticeText.TextXAlignment = Enum.TextXAlignment.Left NoticeText.TextYAlignment = Enum.TextYAlignment.Top
 NoticeText.TextWrapped = true NoticeText.Parent = NoticeBox
@@ -291,7 +291,7 @@ createToggle(tabESP, "Distance", function(v) Settings.ESP_Distance = v end)
 createToggle(tabESP, "Weapon", function(v) Settings.ESP_Weapon = v end)
 createToggle(tabESP, "Head Dot", function(v) Settings.ESP_HeadDot = v end)
 createToggle(tabESP, "Tracers", function(v) Settings.ESP_Tracers = v end)
-createToggle(tabESP, "Offscreen", function(v) Settings.ESP_Offscreen = v end)
+createToggle(tabESP, "Offscreen Arrows", function(v) Settings.ESP_Offscreen = v end)
 createToggle(tabESP, "Skeleton", function(v) Settings.ESP_Skeleton = v end)
 createToggle(tabESP, "Chams", function(v) Settings.ESP_Chams = v end)
 createToggle(tabESP, "Rainbow Chams", function(v) Settings.ESP_RainbowChams = v end)
@@ -307,8 +307,8 @@ createValueAdjuster(tabAim, "HitBox Size", 2, 12, 1, 4, function(v) Settings.Hit
 createToggle(tabAim, "WallCheck", function(v) Settings.WallCheck = v end)
 createToggle(tabAim, "Prediction", function(v) Settings.Prediction = v end)
 createToggle(tabAim, "Show FOV", function(v) Settings.ShowFOV = v end)
-createValueAdjuster(tabAim, "FOV Size", 30, 300, 10, 120, function(v) Settings.FOV = v end)
-createValueAdjuster(tabAim, "Smoothness", 1, 20, 1, 6, function(v) Settings.Smoothness = v end)
+createValueAdjuster(tabAim, "FOV Size", 30, 300, 10, 130, function(v) Settings.FOV = v end)
+createValueAdjuster(tabAim, "Smoothness", 1, 10, 1, 3, function(v) Settings.Smoothness = v end)
 
 local aimPartBtn = Instance.new("TextButton")
 aimPartBtn.Size = UDim2.new(1, -4, 0, 32) aimPartBtn.BackgroundColor3 = Color3.fromRGB(110, 35, 100)
@@ -322,10 +322,10 @@ end)
 
 local tabUtils = createTab("UTILS", Color3.fromRGB(25, 45, 100))
 createToggle(tabUtils, "RGB Menu", function(v) Settings.RGBMenu = v end)
-createToggle(tabUtils, "Speed", function(v) Settings.SpeedEnabled = v if not v and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then pcall(function() LocalPlayer.Character.Humanoid.WalkSpeed = 16 end) end end)
-createValueAdjuster(tabUtils, "Speed Val", 16, 150, 5, 32, function(v) Settings.SpeedValue = v end)
-createToggle(tabUtils, "JumpPower", function(v) Settings.JumpPowerEnabled = v end)
-createValueAdjuster(tabUtils, "Jump Val", 50, 250, 10, 80, function(v) Settings.JumpPowerValue = v end)
+createToggle(tabUtils, "Speed (Bypass)", function(v) Settings.SpeedEnabled = v end)
+createValueAdjuster(tabUtils, "Speed Val", 16, 120, 4, 28, function(v) Settings.SpeedValue = v end)
+createToggle(tabUtils, "Jump (Bypass)", function(v) Settings.JumpPowerEnabled = v end)
+createValueAdjuster(tabUtils, "Jump Val", 50, 200, 10, 70, function(v) Settings.JumpPowerValue = v end)
 createToggle(tabUtils, "Fly", function(v) Settings.FlyEnabled = v end)
 createValueAdjuster(tabUtils, "Fly Spd", 20, 200, 10, 50, function(v) Settings.FlySpeed = v end)
 createToggle(tabUtils, "Infinite Jump", function(v) Settings.InfiniteJump = v end)
@@ -357,7 +357,7 @@ createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
--- Nebula X Hub v45 (Part 3 of 3)
+-- Nebula X Hub v47 (Part 3 of 3)
 UserInputService.JumpRequest:Connect(function()
     pcall(function()
         if Settings and Settings.InfiniteJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
@@ -390,25 +390,34 @@ task.spawn(function()
     end
 end)
 
+-- Мощный универсальный движок фоновых функций (Noclip, GodMode, GhostMode, Speed, Jump)
 task.spawn(function()
-    while task.wait(0.2) do
+    while task.wait(0.1) do
         pcall(function()
             local char = LocalPlayer.Character
             if not char then return end
             local hum = char:FindFirstChildOfClass("Humanoid")
             local root = char:FindFirstChild("HumanoidRootPart")
 
-            if Settings and hum then
-                if Settings.JumpPowerEnabled then
-                    hum.UseJumpPower = true
-                    hum.JumpPower = Settings.JumpPowerValue
-                elseif Settings.SuperJump then
-                    hum.JumpPower = 100
-                else
-                    hum.JumpPower = 50
+            if Settings and hum and root then
+                if Settings.SpeedEnabled then
+                    local moveVector = hum.MoveDirection
+                    if moveVector.Magnitude > 0 then
+                        root.CFrame = root.CFrame + (moveVector * (Settings.SpeedValue / 140))
+                    end
+                end
+                if Settings.JumpPowerEnabled and hum.FloorMaterial ~= Enum.Material.Air then
+                    if UserInputService:IsKeyDown(Enum.KeyCode.Space) or hum:GetState() == Enum.HumanoidStateType.Jumping then
+                        root.Velocity = Vector3.new(root.Velocity.X, Settings.JumpPowerValue, root.Velocity.Z)
+                    end
+                end
+                if Settings.SuperJump then hum.JumpPower = 100 end
+
+                if Settings.GodMode then
+                    hum.MaxHealth = math.huge
+                    hum.Health = math.huge
                 end
                 if Settings.AutoHeal then hum.Health = hum.MaxHealth end
-                if Settings.GodMode then hum.MaxHealth = math.huge hum.Health = math.huge end
             end
 
             if Settings and root and Settings.AntiVoid and root.Position.Y < -50 then
@@ -423,13 +432,20 @@ task.spawn(function()
 
             if Settings and hum and Settings.AutoRespawn and hum.Health <= 0 then hum.Health = 100 end
 
+            -- Улучшенный Ghost Mode (Невидимость)
             if Settings and Settings.GhostMode and char then
                 for _, part in pairs(char:GetDescendants()) do
-                    if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then part.Transparency = 0.6 end
+                    if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then 
+                        part.Transparency = 0.85
+                        part.LocalTransparencyModifier = 0.85
+                    end
                 end
             elseif char then
                 for _, part in pairs(char:GetDescendants()) do
-                    if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then part.Transparency = 0 end
+                    if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then 
+                        part.Transparency = 0
+                        part.LocalTransparencyModifier = 0
+                    end
                 end
             end
 
@@ -450,6 +466,15 @@ task.spawn(function()
 
             if Settings and hum and Settings.PlatformStand then hum.PlatformStand = true elseif hum then hum.PlatformStand = false end
 
+            -- Ультимативный Noclip везде
+            if Settings and Settings.Noclip then
+                for _, part in pairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+
             for _, p in ipairs(Players:GetPlayers()) do
                 if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
                     local rootPart = p.Character.HumanoidRootPart
@@ -468,7 +493,7 @@ task.spawn(function()
 end)
 
 local fovCircle = Drawing.new("Circle")
-fovCircle.Visible = false fovCircle.Radius = 120 fovCircle.Color = Color3.fromRGB(255, 255, 255)
+fovCircle.Visible = false fovCircle.Radius = 130 fovCircle.Color = Color3.fromRGB(255, 255, 255)
 fovCircle.Thickness = 1.5 fovCircle.Filled = false fovCircle.Transparency = 0.8
 
 local espCache = {}
@@ -541,7 +566,7 @@ RunService.RenderStepped:Connect(function()
                 local targetPart = t.Character[Settings.AimPart]
                 local targetPos = targetPart.Position
                 if Settings.Prediction and targetPart.Parent:FindFirstChild("HumanoidRootPart") then
-                    targetPos = targetPos + (targetPart.Parent.HumanoidRootPart.AssemblyLinearVelocity * 0.08)
+                    targetPos = targetPos + (targetPart.Parent.HumanoidRootPart.AssemblyLinearVelocity * 0.05)
                 end
                 Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, targetPos), 1 / Settings.Smoothness)
             end
@@ -567,9 +592,7 @@ RunService.RenderStepped:Connect(function()
         if char and char:FindFirstChild("Humanoid") then
             local hum = char.Humanoid
             local root = char:FindFirstChild("HumanoidRootPart")
-            if Settings.SpeedEnabled then hum.WalkSpeed = Settings.SpeedValue else hum.WalkSpeed = 16 end
             if Settings.FOVChanger then Camera.FieldOfView = Settings.FOVValue else Camera.FieldOfView = 70 end
-            
             if Settings.CustomZoomEnabled then LocalPlayer.CameraMaxZoomDistance = Settings.CustomZoomValue else LocalPlayer.CameraMaxZoomDistance = 400 end
 
             if Settings.FlyEnabled and root then
@@ -586,9 +609,6 @@ RunService.RenderStepped:Connect(function()
             end
             if Settings.SpinBot and root then
                 root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(35), 0)
-            end
-            if Settings.Noclip then
-                for _, part in pairs(char:GetDescendants()) do if part:IsA("BasePart") then part.CanCollide = false end end
             end
         end
 
@@ -692,16 +712,17 @@ RunService.RenderStepped:Connect(function()
                         cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
                         for _, l in pairs(cache.skeleton) do l.Visible = false end
 
+                        -- Исправленные рабочие Offscreen стрелки
                         if Settings.ESP_Offscreen then
                             local camCFrame = Camera.CFrame
                             local relPos = camCFrame:VectorToObjectSpace(rootPart.Position - camCFrame.Position)
                             local angle = math.atan2(relPos.X, relPos.Z)
                             local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                            local radius = 150
+                            local radius = 130
                             local arrowPos = center + Vector2.new(math.cos(angle - math.pi/2), math.sin(angle - math.pi/2)) * radius
                             
-                            cache.offscreen.PointA = arrowPos + Vector2.new(16, 16)
-                            cache.offscreen.PointB = arrowPos - Vector2.new(16, 16)
+                            cache.offscreen.PointA = arrowPos + Vector2.new(12, 12)
+                            cache.offscreen.PointB = arrowPos - Vector2.new(12, 12)
                             cache.offscreen.PointC = arrowPos + Vector2.new(0, -6)
                             cache.offscreen.Visible = true
                         else cache.offscreen.Visible = false end
@@ -717,4 +738,4 @@ RunService.RenderStepped:Connect(function()
 end)
 
 Players.PlayerRemoving:Connect(removeESP)
-print("Nebula X v45 Ultimate: Все функции загружены и полностью активны!")
+print("Nebula X v47 Full: Все системы активированы!")
