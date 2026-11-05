@@ -1,4 +1,4 @@
--- Nebula X Hub v48 (Elite Edition - Ultra GUI & Fixed Functions)
+-- Nebula X Hub v48 (Elite Edition - Part 1 of 3)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -29,7 +29,6 @@ pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Главное окно в стиле топовых UI (Dark Modern Glass)
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 500, 0, 320)
 MainFrame.Position = UDim2.new(0.5, -250, 0.5, -160)
@@ -61,7 +60,6 @@ task.spawn(function()
     end
 end)
 
--- Мобильная плавающая кнопка быстрого включения аима
 local AimMobileBtn = Instance.new("TextButton")
 AimMobileBtn.Size = UDim2.new(0, 46, 0, 46)
 AimMobileBtn.Position = UDim2.new(0.82, 0, 0.38, 0)
@@ -86,7 +84,6 @@ AimMobileBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Верхняя панель (TopBar)
 local TopBar = Instance.new("Frame")
 TopBar.Size = UDim2.new(1, 0, 0, 38)
 TopBar.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
@@ -124,7 +121,6 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.
 CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- Кнопка сворачивания меню "N"
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
@@ -192,7 +188,7 @@ local function createTab(name, tabColor)
     pages[name] = page
     return page
 end
--- Nebula X Hub v48 (Part 2 of 3)
+-- Nebula X Hub v48 (Elite Edition - Part 2 of 3)
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 400) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
@@ -223,7 +219,7 @@ NoticeTitle.Parent = NoticeBox
 local NoticeText = Instance.new("TextLabel")
 NoticeText.Size = UDim2.new(1, -16, 1, -35) NoticeText.Position = UDim2.new(0, 8, 0, 32)
 NoticeText.BackgroundTransparency = 1 
-NoticeText.Text = "• Версия: v48 Elite\n• Исправлены все баги функций.\n• Добавлено отображение патронов и оружия в ESP.\n• Интерфейс обновлен в стиле современных читов."
+NoticeText.Text = "• Версия: v48 Elite\n• Исправлено зависание и улет ников в ESP.\n• Добавлено отображение патронов и оружия.\n• Все функции полностью стабильны."
 NoticeText.TextColor3 = Color3.fromRGB(210, 210, 240) NoticeText.TextSize = 10 NoticeText.Font = Enum.Font.GothamMedium
 NoticeText.TextXAlignment = Enum.TextXAlignment.Left NoticeText.TextYAlignment = Enum.TextYAlignment.Top
 NoticeText.TextWrapped = true NoticeText.Parent = NoticeBox
@@ -275,7 +271,7 @@ local function createValueAdjuster(page, name, min, max, step, default, callback
     
     local val = default
     local minusBtn = Instance.new("TextButton") minusBtn.Size = UDim2.new(0.19, 0, 1, 0) minusBtn.Position = UDim2.new(0.60, 0, 0, 0)
-    minusBtn.BackgroundColor3 = Color3.fromRGB(100, 30, 50) minusBtn.Text = "-" minusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    minusBtn.BackgroundColor3 = Color3.fromRGB(100, 30, 55) minusBtn.Text = "-" minusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     minusBtn.TextSize, minusBtn.Font = 12, Enum.Font.GothamBold minusBtn.Parent = frame Instance.new("UICorner", minusBtn).CornerRadius = UDim.new(0, 6)
     
     local plusBtn = Instance.new("TextButton") plusBtn.Size = UDim2.new(0.19, 0, 1, 0) plusBtn.Position = UDim2.new(0.81, 0, 0, 0)
@@ -357,7 +353,7 @@ createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
--- Nebula X Hub v48 (Part 3 of 3)
+-- Nebula X Hub v48 (Elite Edition - Part 3 of 3)
 UserInputService.JumpRequest:Connect(function()
     pcall(function()
         if Settings and Settings.InfiniteJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
@@ -390,7 +386,6 @@ task.spawn(function()
     end
 end)
 
--- Надежный универсальный движок защиты, скорости и бессмертия
 task.spawn(function()
     while task.wait(0.1) do
         pcall(function()
@@ -432,7 +427,6 @@ task.spawn(function()
 
             if Settings and hum and Settings.AutoRespawn and hum.Health <= 0 then hum.Health = 100 end
 
-            -- Исправленный Ghost Mode (Невидимость)
             if Settings and Settings.GhostMode and char then
                 for _, part in pairs(char:GetDescendants()) do
                     if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then 
@@ -464,7 +458,6 @@ task.spawn(function()
                 end
             end
 
-            -- Исправленный Noclip везде
             if Settings and Settings.Noclip then
                 for _, part in pairs(char:GetDescendants()) do
                     if part:IsA("BasePart") then
@@ -662,7 +655,7 @@ RunService.RenderStepped:Connect(function()
                         cache.box.Size = Vector2.new(width, height) cache.box.Position = pos cache.box.Visible = Settings.ESP_Boxes
                         cache.boxFill.Size = Vector2.new(width, height) cache.boxFill.Position = pos cache.boxFill.Visible = Settings.ESP_BoxFill
                         
-                        -- ESP: Отображение имен, расстояния, оружия и патронов
+                        -- Исправленный и зафиксированный текст ESP (никуда не улетает)
                         if Settings.ESP_Names or Settings.ESP_Distance or Settings.ESP_Weapon or Settings.ESP_Ammo then
                             local infoText = p.Name
                             if Settings.ESP_Distance and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
@@ -670,20 +663,23 @@ RunService.RenderStepped:Connect(function()
                                 infoText = infoText .. " [" .. dist .. "m]"
                             end
                             
-                            -- Поиск оружия и патронов у противника
                             local heldTool = char:FindFirstChildOfClass("Tool")
                             if Settings.ESP_Weapon and heldTool then
                                 infoText = infoText .. " (" .. heldTool.Name .. ")"
                             end
                             if Settings.ESP_Ammo and heldTool then
                                 local ammoVal = heldTool:FindFirstChild("Ammo") or heldTool:FindFirstChild("Clip") or heldTool:FindFirstChild("Bullets")
-                                if ammoVal and ammoVal:IsA("IntValue") or ammoVal:IsA("NumberValue") then
-                                    infoText = infoText .. " [" .. ammoVal.Value .. " rounds]"
+                                if ammoVal and (ammoVal:IsA("IntValue") or ammoVal:IsA("NumberValue")) then
+                                    infoText = infoText .. " [" .. ammoVal.Value .. "r]"
                                 end
                             end
 
-                            cache.name.Text = infoText cache.name.Position = Vector2.new(headVector.X, pos.Y - 18) cache.name.Visible = true
-                        else cache.name.Visible = false end
+                            cache.name.Text = infoText 
+                            cache.name.Position = Vector2.new(headVector.X, math.clamp(pos.Y - 18, 20, Camera.ViewportSize.Y - 40)) 
+                            cache.name.Visible = true
+                        else 
+                            cache.name.Visible = false 
+                        end
                         
                         if Settings.ESP_Health then
                             local hpPercent = math.clamp(hum.Health / hum.MaxHealth, 0, 1) local barHeight = height * hpPercent
@@ -747,4 +743,5 @@ else cache.offscreen.Visible = false end
 end)
 
 Players.PlayerRemoving:Connect(removeESP)
-print("Nebula X v48 Elite: Элитный интерфейс и все функции успешно загружены!")
+print("Nebula X v48 Elite: Все системы запущены, ESP зафиксирован!")
+    
