@@ -1,4 +1,4 @@
--- Nebula X v49.4 Elite (Full Version with Top Navigation)
+-- Nebula X v49.4 Elite (Draggable UI & Buttons Version)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -13,7 +13,7 @@ local LocalPlayer = Players.LocalPlayer
 
 local Settings = {
     ESP_Boxes = false, ESP_Names = false, ESP_Health = false, ESP_Distance = false, ESP_TeamCheck = true,
-    Aimbot = false, AimBotNPC = false, HitBoxExpander = false, HitBoxSize = 4, AimPart = "Head", Smoothness = 3, FOV = 130,
+    Aimbot = false, AimBotNPC = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, AimPart = "Head", Smoothness = 3, FOV = 130,
     SpeedEnabled = false, JumpPowerEnabled = false, FlyEnabled = false, InfiniteJump = false, Noclip = false,
     GodMode = false, AntiVoid = false, ClickTP = false, Fullbright = false
 }
@@ -24,20 +24,59 @@ pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
+-- Функция для перетаскивания любых элементов (GUI / Кнопок)
+local function makeDraggable(guiObject)
+    local dragging, dragInput, dragStart, startPos
+    
+    guiObject.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = guiObject.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    guiObject.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            guiObject.Position = UDim2.new(
+                startPos.X.Scale, 
+                startPos.X.Offset + delta.X, 
+                startPos.Y.Scale, 
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+end
+
+-- Главное меню (перетаскиваемое)
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 520, 0, 360)
 MainFrame.Position = UDim2.new(0.5, -260, 0.5, -180)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 12, 25)
 MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
-
 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 14)
 
 local MainStroke = Instance.new("UIStroke", MainFrame)
 MainStroke.Thickness = 2
 MainStroke.Color = Color3.fromRGB(220, 80, 255)
 
--- Кнопка сворачивания/открытия ("N")
+makeDraggable(MainFrame) -- Делаем меню двигающимся
+
+-- Кнопка открытия/скрытия ("N") — тоже двигается
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
@@ -51,11 +90,13 @@ local tStroke = Instance.new("UIStroke", ToggleBtn)
 tStroke.Color = Color3.fromRGB(220, 80, 255)
 tStroke.Thickness = 1.5
 
+makeDraggable(ToggleBtn)
+
 ToggleBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
--- Кнопка Аима по игрокам (🎯)
+-- Аим по игрокам (🎯) — перетаскиваемая кнопка
 local AimMobileBtn = Instance.new("TextButton")
 AimMobileBtn.Size = UDim2.new(0, 44, 0, 44)
 AimMobileBtn.Position = UDim2.new(0.85, 0, 0.30, 0)
@@ -69,6 +110,8 @@ local aimBtnStroke = Instance.new("UIStroke", AimMobileBtn)
 aimBtnStroke.Color = Color3.fromRGB(0, 255, 120)
 aimBtnStroke.Thickness = 1.5
 
+makeDraggable(AimMobileBtn)
+
 AimMobileBtn.MouseButton1Click:Connect(function()
     Settings.Aimbot = not Settings.Aimbot
     if Settings.Aimbot then
@@ -80,7 +123,7 @@ AimMobileBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Кнопка Аима по ботам (🤖)
+-- Аим по ботам (🤖) — перетаскиваемая кнопка
 local AimNPCBtn = Instance.new("TextButton")
 AimNPCBtn.Size = UDim2.new(0, 44, 0, 44)
 AimNPCBtn.Position = UDim2.new(0.85, 0, 0.45, 0)
@@ -94,6 +137,8 @@ local aimNPCStroke = Instance.new("UIStroke", AimNPCBtn)
 aimNPCStroke.Color = Color3.fromRGB(255, 140, 0)
 aimNPCStroke.Thickness = 1.5
 
+makeDraggable(AimNPCBtn)
+
 AimNPCBtn.MouseButton1Click:Connect(function()
     Settings.AimBotNPC = not Settings.AimBotNPC
     if Settings.AimBotNPC then
@@ -105,7 +150,7 @@ AimNPCBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Верхняя панель (Заголовок)
+-- Верхняя панель меню
 local TopBar = Instance.new("Frame")
 TopBar.Size = UDim2.new(1, 0, 0, 32)
 TopBar.BackgroundColor3 = Color3.fromRGB(22, 18, 35)
@@ -115,7 +160,7 @@ Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 14)
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 14, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X // ELITE"
+Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X // DRAGGABLE"
 Title.TextColor3 = Color3.fromRGB(240, 220, 255) Title.TextSize = 11 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
 
@@ -126,7 +171,7 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.
 CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- Панель с вкладками НАВЕРХУ (под заголовком)
+-- Верхнее меню вкладок
 local TopMenu = Instance.new("Frame")
 TopMenu.Size = UDim2.new(1, 0, 0, 42) TopMenu.Position = UDim2.new(0, 0, 0, 32)
 TopMenu.BackgroundColor3 = Color3.fromRGB(20, 15, 30) TopMenu.BorderSizePixel = 0 TopMenu.Parent = MainFrame
@@ -146,7 +191,7 @@ local pages = {}
 local function createTab(name, iconText, tabColor)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.new(1, 0, 1, 0) page.BackgroundTransparency = 1 page.Visible = false
-    page.CanvasSize = UDim2.new(0, 0, 0, 500) page.ScrollBarThickness = 3 page.Parent = Container
+    page.CanvasSize = UDim2.new(0, 0, 0, 600) page.ScrollBarThickness = 3 page.Parent = Container
     
     local listLayout = Instance.new("UIListLayout", page)
     listLayout.Padding = UDim.new(0, 6)
@@ -166,7 +211,7 @@ local function createTab(name, iconText, tabColor)
     return page
 end
 
--- Вкладка ГЛАВНАЯ
+-- Вкладка HOME
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 300) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
@@ -191,7 +236,7 @@ local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB
 local NewsText = Instance.new("TextLabel")
 NewsText.Size = UDim2.new(1, -16, 1, -16) NewsText.Position = UDim2.new(0, 8, 0, 8)
 NewsText.BackgroundTransparency = 1 
-NewsText.Text = "• Меню и вкладки теперь сверху!\n• 🎯 Зеленая кнопка — аим по игрокам\n• 🤖 Оранжевая кнопка — аим по ботам\n• 'N' — скрыть/показать интерфейс\n• Полный набор ESP, Utils и Teleport"
+NewsText.Text = "• Теперь меню и кнопки Аима ДВИГАЕМЫЕ!\n• Зажми и потяни палец на меню или кнопках.\n• 🎯 Аим по игрокам | 🤖 Аим по ботам\n• Полный функционал активен."
 NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 10.5 NewsText.Font = Enum.Font.GothamMedium
 NewsText.TextXAlignment = Enum.TextXAlignment.Left NewsText.TextYAlignment = Enum.TextYAlignment.Top
 NewsText.TextWrapped = true NewsText.Parent = NewsBox
@@ -227,20 +272,24 @@ local function createToggle(page, name, callback)
     end)
 end
 
--- Создаем вкладки
+-- Вкладка ESP
 local tabESP = createTab("ESP", "👁️", Color3.fromRGB(15, 75, 45))
-createToggle(tabESP, "Boxes (Рамки)", function(v) Settings.ESP_Boxes = v end)
-createToggle(tabESP, "Names (Имена)", function(v) Settings.ESP_Names = v end)
+createToggle(tabESP, "Boxes (Рамки ESP)", function(v) Settings.ESP_Boxes = v end)
+createToggle(tabESP, "Names (Имена игроков)", function(v) Settings.ESP_Names = v end)
 createToggle(tabESP, "Health (Здоровье)", function(v) Settings.ESP_Health = v end)
+createToggle(tabESP, "Distance (Дистанция)", function(v) Settings.ESP_Distance = v end)
 createToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
 
+-- Вкладка AIM
 local tabAim = createTab("AIM", "🎯", Color3.fromRGB(90, 20, 45))
 createToggle(tabAim, "Aimbot (Аимбот)", function(v) Settings.Aimbot = v end)
 createToggle(tabAim, "HitBox Expander", function(v) Settings.HitBoxExpander = v end)
+createToggle(tabAim, "WallCheck", function(v) Settings.WallCheck = v end)
 
+-- Вкладка ТЕЛЕПОРТ
 local tabTeleport = createTab("TP", "📍", Color3.fromRGB(40, 80, 110))
 local tpScroll = Instance.new("ScrollingFrame")
-tpScroll.Size = UDim2.new(1, 0, 1, 0) tpScroll.BackgroundTransparency = 1 tpScroll.CanvasSize = UDim2.new(0, 0, 0, 300) tpScroll.ScrollBarThickness = 3 tpScroll.Parent = tabTeleport
+tpScroll.Size = UDim2.new(1, 0, 1, 0) tpScroll.BackgroundTransparency = 1 tpScroll.CanvasSize = UDim2.new(0, 0, 0, 400) tpScroll.ScrollBarThickness = 3 tpScroll.Parent = tabTeleport
 
 local function refreshPlayerList()
     for _, child in ipairs(tpScroll:GetChildren()) do
@@ -270,29 +319,31 @@ end
 
 local refreshBtn = Instance.new("TextButton")
 refreshBtn.Size = UDim2.new(1, -4, 0, 32) refreshBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
-refreshBtn.Text = "  🔄 Обновить список" refreshBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+refreshBtn.Text = "  🔄 Обновить список игроков" refreshBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 refreshBtn.TextSize, refreshBtn.Font = 10, Enum.Font.GothamBold refreshBtn.TextXAlignment = Enum.TextXAlignment.Left refreshBtn.Parent = tabTeleport
 Instance.new("UICorner", refreshBtn).CornerRadius = UDim.new(0, 6)
 refreshBtn.MouseButton1Click:Connect(refreshPlayerList)
 refreshPlayerList()
 
+-- Вкладка UTILS
 local tabUtils = createTab("UTILS", "⚙️", Color3.fromRGB(20, 40, 90))
-createToggle(tabUtils, "Speedhack", function(v) Settings.SpeedEnabled = v end)
-createToggle(tabUtils, "JumpPower", function(v) Settings.JumpPowerEnabled = v end)
+createToggle(tabUtils, "Speedhack (Ускорение)", function(v) Settings.SpeedEnabled = v end)
+createToggle(tabUtils, "JumpPower (Высокий прыжок)", function(v) Settings.JumpPowerEnabled = v end)
 createToggle(tabUtils, "Fly (Полет)", function(v) Settings.FlyEnabled = v end)
-createToggle(tabUtils, "Infinite Jump", function(v) Settings.InfiniteJump = v end)
-createToggle(tabUtils, "Noclip", function(v) Settings.Noclip = v end)
-createToggle(tabUtils, "Fullbright", function(v) Settings.Fullbright = v if not v then Lighting.Brightness = 1 Lighting.GlobalShadows = true end end)
+createToggle(tabUtils, "Infinite Jump (Беск. прыжки)", function(v) Settings.InfiniteJump = v end)
+createToggle(tabUtils, "Noclip (Сквозь стены)", function(v) Settings.Noclip = v end)
+createToggle(tabUtils, "Fullbright (Яркий свет)", function(v) Settings.Fullbright = v if not v then Lighting.Brightness = 1 Lighting.GlobalShadows = true end end)
 
+-- Вкладка EXTRA
 local tabExtra = createTab("EXTRA", "📦", Color3.fromRGB(100, 45, 15))
 createToggle(tabExtra, "GodMode (Бессмертие)", function(v) Settings.GodMode = v end)
-createToggle(tabExtra, "Anti-Void", function(v) Settings.AntiVoid = v end)
-createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
+createToggle(tabExtra, "Anti-Void (Защита от падения)", function(v) Settings.AntiVoid = v end)
+createToggle(tabExtra, "Click TP (Телепорт кликом)", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
 
--- Логика
+-- Логика функционала
 local mouse = LocalPlayer:GetMouse()
 mouse.Button1Down:Connect(function()
     pcall(function()
@@ -310,12 +361,31 @@ UserInputService.JumpRequest:Connect(function()
     end)
 end)
 
+local function isTeammate(p)
+    if not Settings.ESP_TeamCheck then return false end
+    if p.Team and LocalPlayer.Team and p.Team == LocalPlayer.Team then return true end
+    return false
+end
+
+local function isVisible(part, targetChar)
+    if not Settings.WallCheck then return true end
+    local origin = Camera.CFrame.Position
+    local direction = (part.Position - origin)
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+    raycastParams.FilterDescendantsInstances = {LocalPlayer.Character, targetChar}
+    raycastParams.IgnoreWater = true
+    local result = workspace:Raycast(origin, direction, raycastParams)
+    return result == nil
+end
+
 local function getClosestPlayer()
     local target, shortest = nil, Settings.FOV
     for _, p in ipairs(Players:GetPlayers()) do
         pcall(function()
-            if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild(Settings.AimPart) then
+            if p ~= LocalPlayer and not isTeammate(p) and p.Character and p.Character:FindFirstChild(Settings.AimPart) then
                 local part = p.Character[Settings.AimPart]
+                if not isVisible(part, p.Character) then return end
                 local pos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 if onScreen then
                     local dist = (Vector2.new(pos.X, pos.Y) - Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)).Magnitude
@@ -348,6 +418,7 @@ local function getClosestNPC()
 end
 
 local espCache = {}
+
 RunService.RenderStepped:Connect(function()
     pcall(function()
         if Settings.Aimbot then
@@ -391,11 +462,11 @@ RunService.RenderStepped:Connect(function()
         for _, p in ipairs(Players:GetPlayers()) do
             if p ~= LocalPlayer and p.Character then
                 local pChar = p.Character
-                if Settings.ESP_Boxes or Settings.ESP_Names then
+                if Settings.ESP_Boxes or Settings.ESP_Names or Settings.ESP_Health or Settings.ESP_Distance then
                     if not espCache[p] then
                         local hl = Instance.new("Highlight")
                         hl.Adornee = pChar
-                        hl.FillTransparency = 0.5
+                        hl.FillTransparency = 0.6
                         hl.OutlineColor = Color3.fromRGB(220, 80, 255)
                         hl.Parent = pChar
                         espCache[p] = hl
@@ -424,4 +495,4 @@ RunService.RenderStepped:Connect(function()
     end)
 end)
 
-print("Nebula X Elite с верхним меню успешно запущен!")
+print("Nebula X Elite: Двигающиеся кнопки и полный функционал активированы!")
