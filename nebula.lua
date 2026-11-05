@@ -61,6 +61,8 @@ end
 
 local G = Instance.new("ScreenGui", LP:WaitForChild("PlayerGui"))
 G.Name = "NebulaXV2"
+
+-- Главное меню
 local M = Instance.new("Frame", G)
 M.Size = UDim2.new(0, 520, 0, 390)
 M.Position = UDim2.new(0.5, -260, 0.5, -195)
@@ -69,6 +71,7 @@ Instance.new("UICorner", M).CornerRadius = UDim.new(0, 12)
 Instance.new("UIStroke", M).Color = Color3.fromRGB(220, 80, 255)
 Drag(M)
 
+-- Кнопка "N" (Скрыть/Показать меню)
 local B = Instance.new("TextButton", G)
 B.Size = UDim2.new(0, 45, 0, 45)
 B.Position = UDim2.new(0, 20, 0, 100)
@@ -80,6 +83,26 @@ Instance.new("UICorner", B).CornerRadius = UDim.new(1, 0)
 Drag(B)
 B.MouseButton1Click:Connect(function()
     M.Visible = not M.Visible
+end)
+
+-- Отдельная кнопка Аима 🎯
+local AimBtn = Instance.new("TextButton", G)
+AimBtn.Size = UDim2.new(0, 45, 0, 45)
+AimBtn.Position = UDim2.new(0.85, 0, 0.30, 0)
+AimBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
+AimBtn.Text = "🎯"
+AimBtn.TextSize = 18
+AimBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", AimBtn).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", AimBtn).Color = Color3.fromRGB(0, 255, 120)
+Drag(AimBtn)
+AimBtn.MouseButton1Click:Connect(function()
+    S.Aimbot = not S.Aimbot
+    if S.Aimbot then
+        AimBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 90)
+    else
+        AimBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
+    end
 end)
 
 local Ti = Instance.new("TextLabel", M)
@@ -175,6 +198,9 @@ local function Tog(p, n, k)
         s.Color = st and Color3.fromRGB(0, 255, 120) or Color3.fromRGB(180, 100, 255)
         if k then
             S[k] = st
+            if k == "Aimbot" then
+                AimBtn.BackgroundColor3 = st and Color3.fromRGB(30, 180, 90) or Color3.fromRGB(25, 25, 38)
+            end
         end
     end)
 end
@@ -535,7 +561,7 @@ R.RenderStepped:Connect(function(dt)
             if S.GodMode and hm then
                 hm.Health = math.huge
             end
-            if S.AntiRagdoll and hm then
+                        if S.AntiRagdoll and hm then
                 hm:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
                 hm:SetStateEnabled(Enum.HumanoidStateType.Physics, false)
             end
@@ -546,16 +572,16 @@ R.RenderStepped:Connect(function(dt)
                 hm:ChangeState(Enum.HumanoidStateType.Jumping)
             end
             if S.WaterWalk and rt then
-    local r = workspace:Raycast(rt.Position, Vector3.new(0, -10, 0))
-    if r then
-        rt.CFrame = rt.CFrame + Vector3.new(0, (r.Position.Y + 3) - rt.Position.Y, 0)
-        rt.Velocity = Vector3.new(rt.Velocity.X, 0, rt.Velocity.Z)
-    end
-end
-if S.AntiVoid and rt and rt.Position.Y < -50 then
-    rt.CFrame = rt.CFrame + Vector3.new(0, 100, 0)
-end
-if S.Noclip then
+                local r = workspace:Raycast(rt.Position, Vector3.new(0, -10, 0))
+                if r then
+                    rt.CFrame = rt.CFrame + Vector3.new(0, (r.Position.Y + 3) - rt.Position.Y, 0)
+                    rt.Velocity = Vector3.new(rt.Velocity.X, 0, rt.Velocity.Z)
+                end
+            end
+            if S.AntiVoid and rt and rt.Position.Y < -50 then
+                rt.CFrame = rt.CFrame + Vector3.new(0, 100, 0)
+            end
+            if S.Noclip then
                 for _, p in pairs(ch:GetDescendants()) do
                     if p:IsA("BasePart") then
                         p.CanCollide = false
@@ -693,3 +719,4 @@ if S.Noclip then
         end
     end)
 end)
+           
