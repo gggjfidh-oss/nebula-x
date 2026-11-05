@@ -1,4 +1,4 @@
--- Nebula X v49.4 Elite (Fixed & Ultimate Full Complete Version)
+-- Nebula X v49.4 Elite (Ultimate Expanded & Full Featured Version)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -63,7 +63,7 @@ MainStroke.Thickness = 2
 MainStroke.Color = Color3.fromRGB(220, 80, 255)
 makeDraggable(MainFrame)
 
--- Кнопка "N" (Скрытие меню)
+-- Кнопка "N"
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
@@ -135,7 +135,7 @@ Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 14)
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 14, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X // FIXED ELITE"
+Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X // FULL MAXIMUM ELITE"
 Title.TextColor3 = Color3.fromRGB(240, 220, 255) Title.TextSize = 11 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
 
@@ -165,7 +165,7 @@ local pages = {}
 local function createTab(name, iconText, tabColor)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.new(1, 0, 1, 0) page.BackgroundTransparency = 1 page.Visible = false
-    page.CanvasSize = UDim2.new(0, 0, 0, 1050) page.ScrollBarThickness = 3 page.Parent = Container
+    page.CanvasSize = UDim2.new(0, 0, 0, 1200) page.ScrollBarThickness = 3 page.Parent = Container
     
     local listLayout = Instance.new("UIListLayout", page)
     listLayout.Padding = UDim.new(0, 6)
@@ -185,7 +185,7 @@ local function createTab(name, iconText, tabColor)
     return page
 end
 
--- Вкладка ГЛАВНАЯ
+-- Главная вкладка
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 300) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
@@ -210,7 +210,7 @@ local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB
 local NewsText = Instance.new("TextLabel")
 NewsText.Size = UDim2.new(1, -16, 1, -16) NewsText.Position = UDim2.new(0, 8, 0, 8)
 NewsText.BackgroundTransparency = 1 
-NewsText.Text = "• [v49.4 Fixed] Все синтаксические ошибки исправлены!\n• Скрипт полностью готов к работе в Delta.\n• Перетаскивайте меню и кнопки аима пальцем."
+NewsText.Text = "• [v49.4 Ultimate Full] Полные настройки ESP, AIM и UTILS!\n• Все функции выведены отдельными кнопками.\n• Интерфейс полностью перетаскиваемый."
 NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 10.5 NewsText.Font = Enum.Font.GothamMedium
 NewsText.TextXAlignment = Enum.TextXAlignment.Left NewsText.TextYAlignment = Enum.TextYAlignment.Top
 NewsText.TextWrapped = true NewsText.Parent = NewsBox
@@ -245,7 +245,7 @@ local function createToggle(page, name, callback)
     end)
 end
 
--- Вкладка ESP
+-- Вкладка ESP (Максимально подробная)
 local tabESP = createTab("ESP", "👁️", Color3.fromRGB(15, 75, 45))
 createToggle(tabESP, "Boxes (Рамки ESP)", function(v) Settings.ESP_Boxes = v end)
 createToggle(tabESP, "Names (Имена игроков)", function(v) Settings.ESP_Names = v end)
@@ -253,9 +253,10 @@ createToggle(tabESP, "Health (Здоровье)", function(v) Settings.ESP_Healt
 createToggle(tabESP, "Distance (Дистанция)", function(v) Settings.ESP_Distance = v end)
 createToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
 
--- Вкладка AIM
+-- Вкладка AIM (Максимально подробная)
 local tabAim = createTab("AIM", "🎯", Color3.fromRGB(90, 20, 45))
 createToggle(tabAim, "Aimbot (Аимбот)", function(v) Settings.Aimbot = v end)
+createToggle(tabAim, "AimBot NPC (Аим на ботов)", function(v) Settings.AimBotNPC = v end)
 createToggle(tabAim, "HitBox Expander", function(v) Settings.HitBoxExpander = v end)
 createToggle(tabAim, "WallCheck (Проверка стен)", function(v) Settings.WallCheck = v end)
 
@@ -313,7 +314,7 @@ Instance.new("UICorner", refreshBtn).CornerRadius = UDim.new(0, 6)
 refreshBtn.MouseButton1Click:Connect(refreshPlayerList)
 refreshPlayerList()
 
--- Вкладка UTILS
+-- Вкладка UTILS (Максимально подробная)
 local tabUtils = createTab("UTILS", "⚙️", Color3.fromRGB(20, 40, 90))
 createToggle(tabUtils, "Speedhack (Ускорение)", function(v) Settings.SpeedEnabled = v end)
 
@@ -401,11 +402,13 @@ local function getClosestPlayer()
                 local pos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 if onScreen then
                     local dist = (Vector2.new(pos.X, pos.Y) - Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)).Magnitude
-                    if dist < shortest then shortest = dist target = p end
+                    (Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)).Magnitude
+                        if dist < shortest then shortest = dist target = p end
+                    end
                 end
             end
-        end)
-    end
+        end
+    end)
     return target
 end
 
@@ -478,10 +481,13 @@ RunService.RenderStepped:Connect(function()
                     if not espCache[p] then
                         local hl = Instance.new("Highlight")
                         hl.Adornee = pChar
-                        hl.FillTransparency = 0.6
+                        hl.FillTransparency = (Settings.ESP_Boxes and 0.5 or 1)
+                        hl.OutlineTransparency = (Settings.ESP_Names and 0 or 1)
                         hl.OutlineColor = Color3.fromRGB(220, 80, 255)
                         hl.Parent = pChar
                         espCache[p] = hl
+                    else
+                        espCache[p].FillTransparency = (Settings.ESP_Boxes and 0.5 or 1)
                     end
                 else
                     if espCache[p] then
@@ -507,4 +513,5 @@ RunService.RenderStepped:Connect(function()
     end)
 end)
 
-print("Nebula X Elite: Абсолютно полный набор функций успешно активирован!")
+print("Nebula X Elite: Полный фарш со всеми функциями активирован!")
+
