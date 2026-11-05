@@ -211,7 +211,9 @@ Tog(A, "HitBox", "HitBoxExpander")
 Tog(A, "WallCheck", "WallCheck")
 
 Btn(A, "⚡ Скорость: [Быстро]", function()
-    if S.Smoothness == 3 then
+    if S.AntiVoid and rt and rt.Position.Y < -50 then 
+    rt.CFrame = rt.CFrame + Vector3.new(0, 100, 0) 
+        end
         S.Smoothness = 1.5
     elseif S.Smoothness == 1.5 then
         S.Smoothness = 6
