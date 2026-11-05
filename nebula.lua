@@ -1,4 +1,4 @@
--- Nebula X Hub v49.2 Elite (Full Restore & Cleaned)
+-- Nebula X Hub v49.4 Elite (Top Bar Icon Menu & Dual Aim)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -15,7 +15,7 @@ local Settings = {
     ESP_Boxes = false, ESP_BoxFill = false, ESP_Names = false,
     ESP_Health = false, ESP_Distance = false, ESP_Weapon = false, ESP_Ammo = false,
     ESP_Tracers = false, ESP_Offscreen = false, ESP_Skeleton = false, ESP_HeadDot = false, ESP_Chams = false, ESP_RainbowChams = false, ESP_ViewAngle = false, ESP_TeamCheck = true,
-    Aimbot = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, Prediction = false, SilentAim = false, AimPart = "Head", Smoothness = 3,
+    Aimbot = false, AimBotNPC = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, Prediction = false, SilentAim = false, AimPart = "Head", Smoothness = 3,
     ShowFOV = false, FOV = 130, SpeedEnabled = false, SpeedValue = 28, JumpPowerEnabled = false, JumpPowerValue = 70,
     FlyEnabled = false, FlySpeed = 50, InfiniteJump = false, SuperJump = false, Bhop = false, Noclip = false,
     Freecam = false, SpinBot = false, KillAura = false, AutoEquip = false, AutoRespawn = false, AutoHeal = false, GhostMode = false, 
@@ -30,17 +30,17 @@ if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("Player
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 520, 0, 340)
-MainFrame.Position = UDim2.new(0.5, -260, 0.5, -170)
-MainFrame.BackgroundColor3 = Color3.fromRGB(13, 13, 20)
+MainFrame.Size = UDim2.new(0, 540, 0, 360)
+MainFrame.Position = UDim2.new(0.5, -270, 0.5, -180)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 12, 25)
 MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
 
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 14)
 
 local MainStroke = Instance.new("UIStroke", MainFrame)
 MainStroke.Thickness = 2
-MainStroke.Color = Color3.fromRGB(138, 43, 226)
+MainStroke.Color = Color3.fromRGB(220, 80, 255)
 
 task.spawn(function()
     while true do
@@ -52,7 +52,7 @@ task.spawn(function()
                     task.wait(0.03)
                 end
             else
-                MainStroke.Color = Color3.fromRGB(138, 43, 226)
+                MainStroke.Color = Color3.fromRGB(220, 80, 255)
                 task.wait(0.5)
             end
         end)
@@ -60,67 +60,7 @@ task.spawn(function()
     end
 end)
 
-local AimMobileBtn = Instance.new("TextButton")
-AimMobileBtn.Size = UDim2.new(0, 46, 0, 46)
-AimMobileBtn.Position = UDim2.new(0.82, 0, 0.38, 0)
-AimMobileBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
-AimMobileBtn.Text = "🎯"
-AimMobileBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-AimMobileBtn.TextSize = 20
-AimMobileBtn.Parent = ScreenGui
-Instance.new("UICorner", AimMobileBtn).CornerRadius = UDim.new(1, 0)
-local aimBtnStroke = Instance.new("UIStroke", AimMobileBtn)
-aimBtnStroke.Color = Color3.fromRGB(138, 43, 226)
-aimBtnStroke.Thickness = 1.5
-
-AimMobileBtn.MouseButton1Click:Connect(function()
-    Settings.Aimbot = not Settings.Aimbot
-    if Settings.Aimbot then
-        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 90)
-        aimBtnStroke.Color = Color3.fromRGB(0, 255, 120)
-    else
-        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
-        aimBtnStroke.Color = Color3.fromRGB(138, 43, 226)
-    end
-end)
-
-local TopBar = Instance.new("Frame")
-TopBar.Size = UDim2.new(1, 0, 0, 38)
-TopBar.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
-TopBar.BorderSizePixel = 0
-TopBar.Parent = MainFrame
-Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 12)
-
-local dragging, dragInput, dragStart, startPos
-TopBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true dragStart = input.Position startPos = MainFrame.Position
-        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
-    end
-end)
-TopBar.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end
-end)
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        local delta = input.Position - dragStart
-        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
-
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 14, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X v49.2  //  ELITE"
-Title.TextColor3 = Color3.fromRGB(230, 220, 255) Title.TextSize = 13 Title.Font = Enum.Font.GothamBold
-Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
-
-local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 26, 0, 26) CloseBtn.Position = UDim2.new(1, -32, 0, 6)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70) CloseBtn.Text = "✕"
-CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.Font = 12, Enum.Font.GothamBold
-CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
-CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
-
+-- Плавающая кнопка открытия/скрытия скрипта ("N")
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
@@ -131,7 +71,7 @@ ToggleBtn.TextSize, ToggleBtn.Font = 20, Enum.Font.GothamBold
 ToggleBtn.Parent = ScreenGui
 Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
 local tStroke = Instance.new("UIStroke", ToggleBtn)
-tStroke.Color = Color3.fromRGB(138, 43, 226)
+tStroke.Color = Color3.fromRGB(220, 80, 255)
 tStroke.Thickness = 1.5
 
 local tDragging, tDragInput, tDragStart, tStartPos
@@ -155,18 +95,112 @@ ToggleBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
-local Sidebar = Instance.new("ScrollingFrame")
-Sidebar.Size = UDim2.new(0, 115, 1, -38) Sidebar.Position = UDim2.new(0, 0, 0, 38)
-Sidebar.BackgroundColor3 = Color3.fromRGB(10, 10, 16) Sidebar.BorderSizePixel = 0 Sidebar.CanvasSize = UDim2.new(0,0,0,350) Sidebar.ScrollBarThickness = 2 Sidebar.Parent = MainFrame
-local SideLayout = Instance.new("UIListLayout", Sidebar) SideLayout.Padding = UDim.new(0, 5)
+-- Плавающая кнопка Аима по Игрокам (🎯)
+local AimMobileBtn = Instance.new("TextButton")
+AimMobileBtn.Size = UDim2.new(0, 44, 0, 44)
+AimMobileBtn.Position = UDim2.new(0.85, 0, 0.30, 0)
+AimMobileBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
+AimMobileBtn.Text = "🎯"
+AimMobileBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+AimMobileBtn.TextSize = 18
+AimMobileBtn.Parent = ScreenGui
+Instance.new("UICorner", AimMobileBtn).CornerRadius = UDim.new(1, 0)
+local aimBtnStroke = Instance.new("UIStroke", AimMobileBtn)
+aimBtnStroke.Color = Color3.fromRGB(0, 255, 120)
+aimBtnStroke.Thickness = 1.5
+
+AimMobileBtn.MouseButton1Click:Connect(function()
+    Settings.Aimbot = not Settings.Aimbot
+    if Settings.Aimbot then
+        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 90)
+        aimBtnStroke.Color = Color3.fromRGB(0, 255, 120)
+    else
+        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
+        aimBtnStroke.Color = Color3.fromRGB(220, 80, 255)
+    end
+end)
+
+-- Плавающая кнопка Аима по Ботам/NPC (🤖)
+local AimNPCBtn = Instance.new("TextButton")
+AimNPCBtn.Size = UDim2.new(0, 44, 0, 44)
+AimNPCBtn.Position = UDim2.new(0.85, 0, 0.45, 0)
+AimNPCBtn.BackgroundColor3 = Color3.fromRGB(45, 25, 20)
+AimNPCBtn.Text = "🤖"
+AimNPCBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+AimNPCBtn.TextSize = 18
+AimNPCBtn.Parent = ScreenGui
+Instance.new("UICorner", AimNPCBtn).CornerRadius = UDim.new(0, 10)
+local aimNPCStroke = Instance.new("UIStroke", AimNPCBtn)
+aimNPCStroke.Color = Color3.fromRGB(255, 140, 0)
+aimNPCStroke.Thickness = 1.5
+
+AimNPCBtn.MouseButton1Click:Connect(function()
+    Settings.AimBotNPC = not Settings.AimBotNPC
+    if Settings.AimBotNPC then
+        AimNPCBtn.BackgroundColor3 = Color3.fromRGB(200, 100, 0)
+        aimNPCStroke.Color = Color3.fromRGB(255, 200, 0)
+    else
+        AimNPCBtn.BackgroundColor3 = Color3.fromRGB(45, 25, 20)
+        aimNPCStroke.Color = Color3.fromRGB(255, 140, 0)
+    end
+end)
+
+-- Верхняя панель перетаскивания
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0, 32)
+TopBar.BackgroundColor3 = Color3.fromRGB(22, 18, 35)
+TopBar.BorderSizePixel = 0
+TopBar.Parent = MainFrame
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 14)
+
+local dragging, dragInput, dragStart, startPos
+TopBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true dragStart = input.Position startPos = MainFrame.Position
+        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+    end
+end)
+TopBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 14, 0, 0)
+Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X v49.4 // ELITE"
+Title.TextColor3 = Color3.fromRGB(240, 220, 255) Title.TextSize = 11 Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
+
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 24, 0, 24) CloseBtn.Position = UDim2.new(1, -30, 0, 4)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70) CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.Font = 11, Enum.Font.GothamBold
+CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
+CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+
+-- Верхнее горизонтальное меню с иконками (как на скриншоте)
+local TopMenu = Instance.new("Frame")
+TopMenu.Size = UDim2.new(1, 0, 0, 50) TopMenu.Position = UDim2.new(0, 0, 0, 32)
+TopMenu.BackgroundColor3 = Color3.fromRGB(20, 15, 30) TopMenu.BorderSizePixel = 0 TopMenu.Parent = MainFrame
+
+local MenuLayout = Instance.new("UIListLayout", TopMenu)
+MenuLayout.FillDirection = Enum.FillDirection.Horizontal
+MenuLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+MenuLayout.SortOrder = Enum.SortOrder.LayoutOrder
+MenuLayout.Padding = UDim.new(0, 6)
 
 local Container = Instance.new("Frame")
-Container.Size = UDim2.new(1, -125, 1, -44) Container.Position = UDim2.new(0, 120, 0, 40)
+Container.Size = UDim2.new(1, -16, 1, -92) Container.Position = UDim2.new(0, 8, 0, 88)
 Container.BackgroundTransparency = 1 Container.Parent = MainFrame
 
 local pages = {}
 
-local function createTab(name, tabColor)
+local function createTab(name, iconText, tabColor)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.new(1, 0, 1, 0) page.BackgroundTransparency = 1 page.Visible = false
     page.CanvasSize = UDim2.new(0, 0, 0, 1500) page.ScrollBarThickness = 3 page.Parent = Container
@@ -176,10 +210,10 @@ local function createTab(name, tabColor)
     listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
     local tabBtn = Instance.new("TextButton")
-    tabBtn.Size = UDim2.new(1, -6, 0, 34) tabBtn.BackgroundColor3 = tabColor
-    tabBtn.Text = name tabBtn.TextColor3 = Color3.fromRGB(240, 240, 250)
-    tabBtn.TextSize, tabBtn.Font = 11, Enum.Font.GothamBold tabBtn.Parent = Sidebar
-    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 6)
+    tabBtn.Size = UDim2.new(0, 82, 1, -6) tabBtn.BackgroundColor3 = tabColor
+    tabBtn.Text = iconText .. "\n" .. name tabBtn.TextColor3 = Color3.fromRGB(240, 240, 250)
+    tabBtn.TextSize, tabBtn.Font = 9, Enum.Font.GothamBold tabBtn.Parent = TopMenu
+    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 8)
     
     tabBtn.MouseButton1Click:Connect(function()
         for _, p in pairs(pages) do p.Visible = false end
@@ -188,39 +222,41 @@ local function createTab(name, tabColor)
     pages[name] = page
     return page
 end
--- Nebula X Hub v49.2 Elite (Part 2 of 3)
+
+-- Создание вкладок с иконками
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
-tabHome.CanvasSize = UDim2.new(0, 0, 0, 500) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
+tabHome.CanvasSize = UDim2.new(0, 0, 0, 450) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
 
 local homeBtn = Instance.new("TextButton")
-homeBtn.Size = UDim2.new(1, -6, 0, 34) homeBtn.BackgroundColor3 = Color3.fromRGB(60, 20, 100)
-homeBtn.Text = "🏠 ГЛАВНАЯ" homeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-homeBtn.TextSize, homeBtn.Font = 11, Enum.Font.GothamBold homeBtn.Parent = Sidebar
-Instance.new("UICorner", homeBtn).CornerRadius = UDim.new(0, 6)
+homeBtn.Size = UDim2.new(0, 82, 1, -6) homeBtn.BackgroundColor3 = Color3.fromRGB(70, 20, 110)
+homeBtn.Text = "🏠\nГЛАВНАЯ" homeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+homeBtn.TextSize, homeBtn.Font = 9, Enum.Font.GothamBold homeBtn.Parent = TopMenu
+Instance.new("UICorner", homeBtn).CornerRadius = UDim.new(0, 8)
 homeBtn.MouseButton1Click:Connect(function()
     for _, p in pairs(pages) do p.Visible = false end
     tabHome.Visible = true
 end)
 pages["HOME"] = tabHome
 
+-- Новостной блок на вкладке ГЛАВНАЯ
 local NewsBox = Instance.new("Frame")
-NewsBox.Size = UDim2.new(1, -8, 0, 250) NewsBox.Position = UDim2.new(0, 0, 0, 5)
-NewsBox.BackgroundColor3 = Color3.fromRGB(18, 18, 30) NewsBox.Parent = tabHome
+NewsBox.Size = UDim2.new(1, -4, 0, 230) NewsBox.Position = UDim2.new(0, 0, 0, 5)
+NewsBox.BackgroundColor3 = Color3.fromRGB(22, 18, 35) NewsBox.Parent = tabHome
 Instance.new("UICorner", NewsBox).CornerRadius = UDim.new(0, 8)
-local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB(138, 43, 226) nStroke.Thickness = 1.5
+local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB(220, 80, 255) nStroke.Thickness = 1.5
 
 local NewsTitle = Instance.new("TextLabel")
-NewsTitle.Size = UDim2.new(1, 0, 0, 30) NewsTitle.Position = UDim2.new(0, 0, 0, 5)
-NewsTitle.BackgroundTransparency = 1 NewsTitle.Text = "🔥 НОВОСТИ ЧИТА NEBULA X"
-NewsTitle.TextColor3 = Color3.fromRGB(255, 215, 0) NewsTitle.TextSize = 12 NewsTitle.Font = Enum.Font.GothamBold
+NewsTitle.Size = UDim2.new(1, 0, 0, 28) NewsTitle.Position = UDim2.new(0, 0, 0, 5)
+NewsTitle.BackgroundTransparency = 1 NewsTitle.Text = "🔥 NEWS & UPDATES"
+NewsTitle.TextColor3 = Color3.fromRGB(255, 215, 0) NewsTitle.TextSize = 11 NewsTitle.Font = Enum.Font.GothamBold
 NewsTitle.Parent = NewsBox
 
 local NewsText = Instance.new("TextLabel")
-NewsText.Size = UDim2.new(1, -16, 1, -40) NewsText.Position = UDim2.new(0, 8, 0, 35)
+NewsText.Size = UDim2.new(1, -16, 1, -35) NewsText.Position = UDim2.new(0, 8, 0, 32)
 NewsText.BackgroundTransparency = 1 
-NewsText.Text = "• [v49.2 UPDATE]: Все вкладки и функции полностью восстановлены!\n• [REMOVED]: Автокликер и NightMode успешно удалены по вашему запросу.\n• [ESP FIX]: Никнеймы и шкалы надежно зафиксированы на экране.\n• [TP & FREECAM]: Телепортация и мобильный Freecam работают идеально."
-NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 10 NewsText.Font = Enum.Font.GothamMedium
+NewsText.Text = "• [v49.4 Elite] Новый дизайн меню с верхними иконками!\n• [v49.4 Elite] Дуальный аим: 🎯 для Игроков, 🤖 для Ботов\n• ESP Fix: Жесткий Clamp никнеймов и стабильный бокс\n• Трассеры: Обновленная подсветка линий\n• Статус: Стабильный обход античита"
+NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 9.5 NewsText.Font = Enum.Font.GothamMedium
 NewsText.TextXAlignment = Enum.TextXAlignment.Left NewsText.TextYAlignment = Enum.TextYAlignment.Top
 NewsText.TextWrapped = true NewsText.Parent = NewsBox
 
@@ -236,13 +272,13 @@ local function createToggle(page, name, callback)
     uIndex = uIndex % #uniqueColors + 1
 
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, -6, 0, 34) btn.BackgroundColor3 = btnColor
+    btn.Size = UDim2.new(1, -4, 0, 32) btn.BackgroundColor3 = btnColor
     btn.Text = "  " .. name .. ": [OFF]" btn.TextColor3 = Color3.fromRGB(240, 240, 255)
     btn.TextSize, btn.Font = 10, Enum.Font.GothamBold btn.TextXAlignment = Enum.TextXAlignment.Left btn.Parent = page
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
     
     local stroke = Instance.new("UIStroke", btn)
-    stroke.Color = Color3.fromRGB(120, 90, 220) stroke.Thickness = 1.2
+    stroke.Color = Color3.fromRGB(180, 100, 255) stroke.Thickness = 1.2
 
     local state = false
     btn.MouseButton1Click:Connect(function()
@@ -256,14 +292,14 @@ local function createToggle(page, name, callback)
             btn.BackgroundColor3 = btnColor 
             btn.TextColor3 = Color3.fromRGB(240, 240, 255) 
             btn.Text = "  " .. name .. ": [OFF]" 
-            stroke.Color = Color3.fromRGB(120, 90, 220)
+            stroke.Color = Color3.fromRGB(180, 100, 255)
         end
         pcall(function() callback(state) end)
     end)
 end
 
 local function createValueAdjuster(page, name, min, max, step, default, callback)
-    local frame = Instance.new("Frame") frame.Size = UDim2.new(1, -6, 0, 34) frame.BackgroundTransparency = 1 frame.Parent = page
+    local frame = Instance.new("Frame") frame.Size = UDim2.new(1, -4, 0, 32) frame.BackgroundTransparency = 1 frame.Parent = page
     local lbl = Instance.new("TextLabel") lbl.Size = UDim2.new(0.58, 0, 1, 0) lbl.BackgroundColor3 = Color3.fromRGB(35, 25, 65)
     lbl.Text = "  " .. name .. ": " .. default lbl.TextColor3 = Color3.fromRGB(230, 230, 255)
     lbl.TextSize, lbl.Font = 10, Enum.Font.GothamBold lbl.TextXAlignment = Enum.TextXAlignment.Left lbl.Parent = frame
@@ -282,7 +318,7 @@ local function createValueAdjuster(page, name, min, max, step, default, callback
     plusBtn.MouseButton1Click:Connect(function() if val < max then val = val + step lbl.Text = "  " .. name .. ": " .. val pcall(function() callback(val) end) end end)
 end
 
-local tabESP = createTab("ESP", Color3.fromRGB(15, 75, 45))
+local tabESP = createTab("ESP", "👁️", Color3.fromRGB(15, 75, 45))
 createToggle(tabESP, "Boxes (Боксы)", function(v) Settings.ESP_Boxes = v end)
 createToggle(tabESP, "Box Fill (Заливка)", function(v) Settings.ESP_BoxFill = v end)
 createToggle(tabESP, "Names (Имена)", function(v) Settings.ESP_Names = v end)
@@ -298,7 +334,7 @@ createToggle(tabESP, "Rainbow Chams", function(v) Settings.ESP_RainbowChams = v 
 createToggle(tabESP, "ViewAngle (Взгляд)", function(v) Settings.ESP_ViewAngle = v end)
 createToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
 
-local tabAim = createTab("AIM", Color3.fromRGB(90, 20, 45))
+local tabAim = createTab("AIM", "🎯", Color3.fromRGB(90, 20, 45))
 createToggle(tabAim, "Aimbot (Аимбот)", function(v) Settings.Aimbot = v end)
 createToggle(tabAim, "Silent Aim", function(v) Settings.SilentAim = v end)
 createToggle(tabAim, "TriggerBot", function(v) Settings.TriggerBot = v end)
@@ -311,7 +347,7 @@ createValueAdjuster(tabAim, "FOV Size", 30, 300, 10, 130, function(v) Settings.F
 createValueAdjuster(tabAim, "Smoothness", 1, 10, 1, 3, function(v) Settings.Smoothness = v end)
 
 local aimPartBtn = Instance.new("TextButton")
-aimPartBtn.Size = UDim2.new(1, -6, 0, 34) aimPartBtn.BackgroundColor3 = Color3.fromRGB(100, 30, 90)
+aimPartBtn.Size = UDim2.new(1, -4, 0, 32) aimPartBtn.BackgroundColor3 = Color3.fromRGB(100, 30, 90)
 aimPartBtn.Text = "  Target: [ Head ]" aimPartBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 aimPartBtn.TextSize, aimPartBtn.Font = 10, Enum.Font.GothamBold aimPartBtn.TextXAlignment = Enum.TextXAlignment.Left aimPartBtn.Parent = tabAim
 Instance.new("UICorner", aimPartBtn).CornerRadius = UDim.new(0, 6)
@@ -320,7 +356,7 @@ aimPartBtn.MouseButton1Click:Connect(function()
     else Settings.AimPart = "Head" aimPartBtn.Text = "  Target: [ Head ]" end
 end)
 
-local tabTeleport = createTab("TP (Игроки)", Color3.fromRGB(40, 80, 110))
+local tabTeleport = createTab("ТЕЛЕПОРТ", "📍", Color3.fromRGB(40, 80, 110))
 local tpScroll = Instance.new("ScrollingFrame")
 tpScroll.Size = UDim2.new(1, 0, 1, 0) tpScroll.BackgroundTransparency = 1 tpScroll.CanvasSize = UDim2.new(0, 0, 0, 600) tpScroll.ScrollBarThickness = 3 tpScroll.Parent = tabTeleport
 
@@ -332,7 +368,7 @@ local function refreshPlayerList()
     for _, p in ipairs(Players:GetPlayers()) do
         if p ~= LocalPlayer then
             local tpBtn = Instance.new("TextButton")
-            tpBtn.Size = UDim2.new(1, -6, 0, 34) tpBtn.Position = UDim2.new(0, 0, 0, yPos)
+            tpBtn.Size = UDim2.new(1, -4, 0, 32) tpBtn.Position = UDim2.new(0, 0, 0, yPos)
             tpBtn.BackgroundColor3 = Color3.fromRGB(30, 50, 80)
             tpBtn.Text = "  ➔ TP к: " .. p.Name tpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
             tpBtn.TextSize, tpBtn.Font = 10, Enum.Font.GothamBold tpBtn.TextXAlignment = Enum.TextXAlignment.Left tpBtn.Parent = tpScroll
@@ -341,24 +377,25 @@ local function refreshPlayerList()
             tpBtn.MouseButton1Click:Connect(function()
                 pcall(function()
                     if p.Character and p.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                         LocalPlayer.Character.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
                     end
-                end)
+                end
             end)
-            yPos = yPos + 40
+            yPos = yPos + 38
         end
     end
 end
 
 local refreshBtn = Instance.new("TextButton")
-refreshBtn.Size = UDim2.new(1, -6, 0, 34) refreshBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
+refreshBtn.Size = UDim2.new(1, -4, 0, 32) refreshBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
 refreshBtn.Text = "  🔄 Обновить список игроков" refreshBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 refreshBtn.TextSize, refreshBtn.Font = 10, Enum.Font.GothamBold refreshBtn.TextXAlignment = Enum.TextXAlignment.Left refreshBtn.Parent = tabTeleport
 Instance.new("UICorner", refreshBtn).CornerRadius = UDim.new(0, 6)
 refreshBtn.MouseButton1Click:Connect(refreshPlayerList)
 refreshPlayerList()
 
-local tabUtils = createTab("UTILS", Color3.fromRGB(20, 40, 90))
+local tabUtils = createTab("UTILS", "⚙️", Color3.fromRGB(20, 40, 90))
 createToggle(tabUtils, "RGB Menu Glow", function(v) Settings.RGBMenu = v end)
 createToggle(tabUtils, "Speed (Bypass)", function(v) Settings.SpeedEnabled = v end)
 createValueAdjuster(tabUtils, "Speed Val", 16, 120, 4, 28, function(v) Settings.SpeedValue = v end)
@@ -384,14 +421,14 @@ createToggle(tabUtils, "Custom Zoom", function(v) Settings.CustomZoomEnabled = v
 createValueAdjuster(tabUtils, "Zoom Max", 100, 2000, 100, 400, function(v) Settings.CustomZoomValue = v end)
 createToggle(tabUtils, "Fullbright", function(v) Settings.Fullbright = v if not v then pcall(function() Lighting.Brightness = 1 Lighting.ClockTime = 12 end) end end)
 
-local tabExtra = createTab("EXTRA", Color3.fromRGB(100, 45, 15))
+local tabExtra = createTab("EXTRA", "📦", Color3.fromRGB(100, 45, 15))
 createToggle(tabExtra, "God Mode (Бессмертие)", function(v) Settings.GodMode = v end)
 createToggle(tabExtra, "Anti-Void", function(v) Settings.AntiVoid = v end)
 createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
--- Nebula X Hub v49.2 Elite (Part 3 of 3)
+    -- Nebula X Hub v49.4 Elite (Part 2 of 2)
 UserInputService.JumpRequest:Connect(function()
     pcall(function()
         if Settings and Settings.InfiniteJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
@@ -583,9 +620,29 @@ local function getClosestPlayer()
     return target
 end
 
+local function getClosestNPC()
+    local target, shortest = nil, Settings.FOV
+    for _, model in ipairs(workspace:GetDescendants()) do
+        pcall(function()
+            if model:IsA("Model") and model ~= LocalPlayer.Character and not Players:GetPlayerFromCharacter(model) then
+                local hum = model:FindFirstChildOfClass("Humanoid")
+                local head = model:FindFirstChild("Head") or model:FindFirstChild("HumanoidRootPart")
+                if hum and head and hum.Health > 0 then
+                    local pos, onScreen = Camera:WorldToViewportPoint(head.Position)
+                    if onScreen then
+                        local dist = (Vector2.new(pos.X, pos.Y) - Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)).Magnitude
+                        if dist < shortest then shortest = dist target = head end
+                    end
+                end
+            end
+        end)
+    end
+    return target
+end
+
 RunService.RenderStepped:Connect(function()
     pcall(function()
-        fovCircle.Visible = Settings.ShowFOV and (Settings.Aimbot or Settings.SilentAim)
+        fovCircle.Visible = Settings.ShowFOV and (Settings.Aimbot or Settings.AimBotNPC or Settings.SilentAim)
         fovCircle.Radius = Settings.FOV
         fovCircle.Position = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)
 
@@ -598,6 +655,13 @@ RunService.RenderStepped:Connect(function()
                     targetPos = targetPos + (targetPart.Parent.HumanoidRootPart.AssemblyLinearVelocity * 0.05)
                 end
                 Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, targetPos), 1 / Settings.Smoothness)
+            end
+        end
+
+        if Settings.AimBotNPC then
+            local npcPart = getClosestNPC()
+            if npcPart then
+                Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, npcPart.Position), 1 / Settings.Smoothness)
             end
         end
 
@@ -662,7 +726,7 @@ RunService.RenderStepped:Connect(function()
                         skeleton = { Drawing.new("Line"), Drawing.new("Line"), Drawing.new("Line"), Drawing.new("Line"), Drawing.new("Line") }
                     }
                     espCache[p].box.Thickness = 1.5 espCache[p].box.Filled = false
-                    espCache[p].boxFill.Thickness = 0 espCache[p].boxFill.Filled = true espCache[p].boxFill.Color = Color3.fromRGB(138, 43, 226) espCache[p].boxFill.Transparency = 0.15
+                    espCache[p].boxFill.Thickness = 0 espCache[p].boxFill.Filled = true espCache[p].boxFill.Color = Color3.fromRGB(220, 80, 255) espCache[p].boxFill.Transparency = 0.15
                     espCache[p].name.Size = 13 espCache[p].name.Center = true espCache[p].name.Outline = true
                     espCache[p].healthBar.Filled = true espCache[p].healthBar.Thickness = 1
                     espCache[p].tracer.Thickness = 1.5 espCache[p].tracer.Color = Color3.fromRGB(200, 150, 255)
@@ -684,7 +748,7 @@ RunService.RenderStepped:Connect(function()
                         if Settings.ESP_RainbowChams then
                             cache.highlight.FillColor = Color3.fromHSV(tick() % 5 / 5, 1, 1)
                         else
-                            cache.highlight.FillColor = Color3.fromRGB(138, 43, 226)
+                            cache.highlight.FillColor = Color3.fromRGB(220, 80, 255)
                         end
                     elseif cache.highlight then
                         cache.highlight:Destroy()
@@ -738,7 +802,7 @@ RunService.RenderStepped:Connect(function()
                         if Settings.ESP_HeadDot and char:FindFirstChild("Head") then
                             local headV, headScreen = Camera:WorldToViewportPoint(char.Head.Position)
                             cache.headDot.Position = Vector2.new(headV.X, headV.Y) cache.headDot.Visible = headScreen
-                        else cache.headDot.Visible = false end
+                        else se cache.headDot.Visible = false end
 
                         if Settings.ESP_ViewAngle and char:FindFirstChild("Head") then
                             local headV = char.Head.Position
@@ -750,43 +814,44 @@ RunService.RenderStepped:Connect(function()
                                 cache.viewAngle.To = Vector2.new(p2.X, p2.Y)
                                 cache.viewAngle.Visible = true
                             else cache.viewAngle.Visible = false end
-                                                else cache.viewAngle.Visible = false end
-                    else cache.viewAngle.Visible = false end
+                        else cache.viewAngle.Visible = false end
 
-                    cache.tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                    cache.tracer.To = Vector2.new(headVector.X, pos.Y + height) cache.tracer.Visible = Settings.ESP_Tracers
+                        cache.tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                        cache.tracer.To = Vector2.new(headVector.X, pos.Y + height) cache.tracer.Visible = Settings.ESP_Tracers
 
-                    if Settings.ESP_Skeleton and char:FindFirstChild("Head") and char:FindFirstChild("UpperTorso") then
-                        local function to2D(part) local v, on = Camera:WorldToViewportPoint(part.Position) return Vector2.new(v.X, v.Y), on end
-                        cache.skeleton[1].From = to2D(char.Head) cache.skeleton[1].To = to2D(char.UpperTorso) cache.skeleton[1].Visible = true
-                    else for _, l in pairs(cache.skeleton) do l.Visible = false end end
-                    cache.offscreen.Visible = false
+                        if Settings.ESP_Skeleton and char:FindFirstChild("Head") and char:FindFirstChild("UpperTorso") then
+                            local function to2D(part) local v, on = Camera:WorldToViewportPoint(part.Position) return Vector2.new(v.X, v.Y), on end
+                            cache.skeleton[1].From = to2D(char.Head) cache.skeleton[1].To = to2D(char.UpperTorso) cache.skeleton[1].Visible = true
+                        else for _, l in pairs(cache.skeleton) do l.Visible = false end end
+                        cache.offscreen.Visible = false
+                    else
+                        cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
+                        for _, l in pairs(cache.skeleton) do l.Visible = false end
+
+                        if Settings.ESP_Offscreen then
+                            local camCFrame = Camera.CFrame
+                            local relPos = camCFrame:VectorToObjectSpace(rootPart.Position - camCFrame.Position)
+                            local angle = math.atan2(relPos.X, relPos.Z)
+                            local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                            local radius = 130
+                            local arrowPos = center + Vector2.new(math.cos(angle - math.pi/2), math.sin(angle - math.pi/2)) * radius
+                            
+                            cache.offscreen.PointA = arrowPos + Vector2.new(12, 12)
+                            cache.offscreen.PointB = arrowPos - Vector2.new(12, 12)
+                            cache.offscreen.PointC = arrowPos + Vector2.new(0, -6)
+                            cache.offscreen.Visible = true
+                        else cache.offscreen.Visible = false end
+                    end
                 else
-                    cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
+                    if cache.highlight then cache.highlight:Destroy() cache.highlight = nil end
+                    cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.offscreen.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
                     for _, l in pairs(cache.skeleton) do l.Visible = false end
-
-                    if Settings.ESP_Offscreen then
-                        local camCFrame = Camera.CFrame
-                        local relPos = camCFrame:VectorToObjectSpace(rootPart.Position - camCFrame.Position)
-                        local angle = math.atan2(relPos.X, relPos.Z)
-                        local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                        local radius = 130
-                        local arrowPos = center + Vector2.new(math.cos(angle - math.pi/2), math.sin(angle - math.pi/2)) * radius
-                        
-                        cache.offscreen.PointA = arrowPos + Vector2.new(12, 12)
-                        cache.offscreen.PointB = arrowPos - Vector2.new(12, 12)
-                        cache.offscreen.PointC = arrowPos + Vector2.new(0, -6)
-                        cache.offscreen.Visible = true
-                    else cache.offscreen.Visible = false end
                 end
-            else
-                if cache.highlight then cache.highlight:Destroy() cache.highlight = nil end
-                cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.offscreen.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
-                for _, l in pairs(cache.skeleton) do l.Visible = false end
             end
         end
     end)
 end)
 
 Players.PlayerRemoving:Connect(removeESP)
-print("Nebula X v49.2 Elite: Всё восстановлено, автокликер и nightmode удалены!")
+print("Nebula X v49.4 Elite: Верхнее меню с иконками и весь функционал активированы!")
+    
