@@ -494,7 +494,7 @@ R.RenderStepped:Connect(function(dt)
                         HeadDots[p].Position = Vector2.new(ps.X, ps.Y)
                         HeadDots[p].Color = Settings.ESP_Rainbow and RC or Color3.fromRGB(220, 80, 255)
                         HeadDots[p].Visible = true
-                    else HeadDots[p].Visible = false end
+                   = false end
                 elseif HeadDots[p] then HeadDots[p]:Remove() HeadDots[p] = nil end
             end
         end
@@ -503,16 +503,35 @@ R.RenderStepped:Connect(function(dt)
             if p ~= LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
                 local rp = p.Character.HumanoidRootPart
                 if Settings.HitBoxExpander then
-                    if rp.Size ~= Vector3.new(6, 6, 6) then rp.Size = Vector3.new(6, 6, 6) rp.Transparency = 0.5 rp.Color = Color3.fromRGB(255, 0, 0) end
-                else if rp.Size ~= Vector3.new(2, 2, 1) then rp.Size = Vector3.new(2, 2, 1) rp.Transparency = 1 end end
+                    if rp.Size ~= Vector3.new(6, 6, 6) then 
+                        rp.Size = Vector3.new(6, 6, 6) 
+                        rp.Transparency = 0.5 
+                        rp.Color = Color3.fromRGB(255, 0, 0) 
+                    end
+                else 
+                    if rp.Size ~= Vector3.new(2, 2, 1) then 
+                        rp.Size = Vector3.new(2, 2, 1) 
+                        rp.Transparency = 1 
+                    end 
+                end
             end
         end
 
         if Settings.TrueInvis then
             local ch = LP.Character
-            if ch then for _, pr in ipairs(ch:GetDescendants()) do if (pr:IsA("BasePart") or pr:IsA("Decal")) and not I_C[pr] then I_C[pr] = pr.Transparency pr.Transparency = 1 end end end
+            if ch then 
+                for _, pr in ipairs(ch:GetDescendants()) do 
+                    if (pr:IsA("BasePart") or pr:IsA("Decal")) and not I_C[pr] then 
+                        I_C[pr] = pr.Transparency 
+                        pr.Transparency = 1 
+                    end 
+                end 
+            end
         else
-            for pr, tr in pairs(I_C) do if pr and pr.Parent then pr.Transparency = tr end end I_C = {}
+            for pr, tr in pairs(I_C) do 
+                if pr and pr.Parent then pr.Transparency = tr end 
+            end 
+            I_C = {}
         end
     end)
 end)
