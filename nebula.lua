@@ -1,4 +1,4 @@
--- Nebula X Hub v49.4 Elite (Top Bar Icon Menu & Dual Aim)
+-- Nebula X Hub v49.4 Elite (Full Unified Script)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -60,7 +60,7 @@ task.spawn(function()
     end
 end)
 
--- Плавающая кнопка открытия/скрытия скрипта ("N")
+-- Кнопка открытия/скрытия ("N")
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
@@ -95,7 +95,7 @@ ToggleBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
--- Плавающая кнопка Аима по Игрокам (🎯)
+-- Аим по игрокам (🎯)
 local AimMobileBtn = Instance.new("TextButton")
 AimMobileBtn.Size = UDim2.new(0, 44, 0, 44)
 AimMobileBtn.Position = UDim2.new(0.85, 0, 0.30, 0)
@@ -120,7 +120,7 @@ AimMobileBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Плавающая кнопка Аима по Ботам/NPC (🤖)
+-- Аим по ботам (🤖)
 local AimNPCBtn = Instance.new("TextButton")
 AimNPCBtn.Size = UDim2.new(0, 44, 0, 44)
 AimNPCBtn.Position = UDim2.new(0.85, 0, 0.45, 0)
@@ -145,7 +145,7 @@ AimNPCBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Верхняя панель перетаскивания
+-- Верхняя панель
 local TopBar = Instance.new("Frame")
 TopBar.Size = UDim2.new(1, 0, 0, 32)
 TopBar.BackgroundColor3 = Color3.fromRGB(22, 18, 35)
@@ -183,7 +183,6 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.
 CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- Верхнее горизонтальное меню с иконками (как на скриншоте)
 local TopMenu = Instance.new("Frame")
 TopMenu.Size = UDim2.new(1, 0, 0, 50) TopMenu.Position = UDim2.new(0, 0, 0, 32)
 TopMenu.BackgroundColor3 = Color3.fromRGB(20, 15, 30) TopMenu.BorderSizePixel = 0 TopMenu.Parent = MainFrame
@@ -223,7 +222,6 @@ local function createTab(name, iconText, tabColor)
     return page
 end
 
--- Создание вкладок с иконками
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 450) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
@@ -239,7 +237,6 @@ homeBtn.MouseButton1Click:Connect(function()
 end)
 pages["HOME"] = tabHome
 
--- Новостной блок на вкладке ГЛАВНАЯ
 local NewsBox = Instance.new("Frame")
 NewsBox.Size = UDim2.new(1, -4, 0, 230) NewsBox.Position = UDim2.new(0, 0, 0, 5)
 NewsBox.BackgroundColor3 = Color3.fromRGB(22, 18, 35) NewsBox.Parent = tabHome
@@ -255,7 +252,7 @@ NewsTitle.Parent = NewsBox
 local NewsText = Instance.new("TextLabel")
 NewsText.Size = UDim2.new(1, -16, 1, -35) NewsText.Position = UDim2.new(0, 8, 0, 32)
 NewsText.BackgroundTransparency = 1 
-NewsText.Text = "• [v49.4 Elite] Новый дизайн меню с верхними иконками!\n• [v49.4 Elite] Дуальный аим: 🎯 для Игроков, 🤖 для Ботов\n• ESP Fix: Жесткий Clamp никнеймов и стабильный бокс\n• Трассеры: Обновленная подсветка линий\n• Статус: Стабильный обход античита"
+NewsText.Text = "• [v49.4 Elite] Верхнее меню с иконками!\n• [v49.4 Elite] Дуальный аим: 🎯 Игроки, 🤖 Боты\n• ESP Fix: Стабильные боксы и никнеймы\n• Статус: Стабильно & Обход античита"
 NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 9.5 NewsText.Font = Enum.Font.GothamMedium
 NewsText.TextXAlignment = Enum.TextXAlignment.Left NewsText.TextYAlignment = Enum.TextYAlignment.Top
 NewsText.TextWrapped = true NewsText.Parent = NewsBox
@@ -377,10 +374,9 @@ local function refreshPlayerList()
             tpBtn.MouseButton1Click:Connect(function()
                 pcall(function()
                     if p.Character and p.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                         LocalPlayer.Character.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
                     end
-                end
+                end)
             end)
             yPos = yPos + 38
         end
@@ -388,7 +384,7 @@ local function refreshPlayerList()
 end
 
 local refreshBtn = Instance.new("TextButton")
-refreshBtn.Size = UDim2.new(1, -4, 0, 32) refreshBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
+refreshBtn.Size = UDim2.new(1,-4, 0, 32) refreshBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
 refreshBtn.Text = "  🔄 Обновить список игроков" refreshBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 refreshBtn.TextSize, refreshBtn.Font = 10, Enum.Font.GothamBold refreshBtn.TextXAlignment = Enum.TextXAlignment.Left refreshBtn.Parent = tabTeleport
 Instance.new("UICorner", refreshBtn).CornerRadius = UDim.new(0, 6)
@@ -428,7 +424,6 @@ createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
-    -- Nebula X Hub v49.4 Elite (Part 2 of 2)
 UserInputService.JumpRequest:Connect(function()
     pcall(function()
         if Settings and Settings.InfiniteJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
@@ -802,7 +797,7 @@ RunService.RenderStepped:Connect(function()
                         if Settings.ESP_HeadDot and char:FindFirstChild("Head") then
                             local headV, headScreen = Camera:WorldToViewportPoint(char.Head.Position)
                             cache.headDot.Position = Vector2.new(headV.X, headV.Y) cache.headDot.Visible = headScreen
-                        else se cache.headDot.Visible = false end
+                        else cache.headDot.Visible = false ense cache.headDot.Visible = false end
 
                         if Settings.ESP_ViewAngle and char:FindFirstChild("Head") then
                             local headV = char.Head.Position
@@ -853,5 +848,4 @@ RunService.RenderStepped:Connect(function()
 end)
 
 Players.PlayerRemoving:Connect(removeESP)
-print("Nebula X v49.4 Elite: Верхнее меню с иконками и весь функционал активированы!")
-    
+print("Nebula X v49.4 Elite: Скрипт полностью запущен!")
