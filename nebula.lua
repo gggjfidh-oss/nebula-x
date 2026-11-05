@@ -1,4 +1,4 @@
--- Nebula X v49.4 Elite (Full Ultimate Version)
+-- Nebula X v49.4 Elite (Full Version with Top Navigation)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -13,10 +13,9 @@ local LocalPlayer = Players.LocalPlayer
 
 local Settings = {
     ESP_Boxes = false, ESP_Names = false, ESP_Health = false, ESP_Distance = false, ESP_TeamCheck = true,
-    Aimbot = false, AimBotNPC = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, AimPart = "Head", Smoothness = 3, FOV = 130,
-    SpeedEnabled = false, SpeedValue = 28, JumpPowerEnabled = false, JumpPowerValue = 70,
-    FlyEnabled = false, FlySpeed = 50, InfiniteJump = false, Noclip = false,
-    GodMode = false, AntiVoid = false, ClickTP = false, Fullbright = false, RGBMenu = false, AutoHeal = false, AntiAFK = true
+    Aimbot = false, AimBotNPC = false, HitBoxExpander = false, HitBoxSize = 4, AimPart = "Head", Smoothness = 3, FOV = 130,
+    SpeedEnabled = false, JumpPowerEnabled = false, FlyEnabled = false, InfiniteJump = false, Noclip = false,
+    GodMode = false, AntiVoid = false, ClickTP = false, Fullbright = false
 }
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -106,7 +105,7 @@ AimNPCBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Верхняя панель
+-- Верхняя панель (Заголовок)
 local TopBar = Instance.new("Frame")
 TopBar.Size = UDim2.new(1, 0, 0, 32)
 TopBar.BackgroundColor3 = Color3.fromRGB(22, 18, 35)
@@ -116,7 +115,7 @@ Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 14)
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 14, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X v49.4 // ELITE"
+Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X // ELITE"
 Title.TextColor3 = Color3.fromRGB(240, 220, 255) Title.TextSize = 11 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
 
@@ -127,9 +126,9 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.
 CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- Меню вкладки сверху
+-- Панель с вкладками НАВЕРХУ (под заголовком)
 local TopMenu = Instance.new("Frame")
-TopMenu.Size = UDim2.new(1, 0, 0, 46) TopMenu.Position = UDim2.new(0, 0, 0, 32)
+TopMenu.Size = UDim2.new(1, 0, 0, 42) TopMenu.Position = UDim2.new(0, 0, 0, 32)
 TopMenu.BackgroundColor3 = Color3.fromRGB(20, 15, 30) TopMenu.BorderSizePixel = 0 TopMenu.Parent = MainFrame
 
 local MenuLayout = Instance.new("UIListLayout", TopMenu)
@@ -139,7 +138,7 @@ MenuLayout.SortOrder = Enum.SortOrder.LayoutOrder
 MenuLayout.Padding = UDim.new(0, 4)
 
 local Container = Instance.new("Frame")
-Container.Size = UDim2.new(1, -16, 1, -88) Container.Position = UDim2.new(0, 8, 0, 84)
+Container.Size = UDim2.new(1, -16, 1, -84) Container.Position = UDim2.new(0, 8, 0, 78)
 Container.BackgroundTransparency = 1 Container.Parent = MainFrame
 
 local pages = {}
@@ -147,17 +146,17 @@ local pages = {}
 local function createTab(name, iconText, tabColor)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.new(1, 0, 1, 0) page.BackgroundTransparency = 1 page.Visible = false
-    page.CanvasSize = UDim2.new(0, 0, 0, 900) page.ScrollBarThickness = 3 page.Parent = Container
+    page.CanvasSize = UDim2.new(0, 0, 0, 500) page.ScrollBarThickness = 3 page.Parent = Container
     
     local listLayout = Instance.new("UIListLayout", page)
     listLayout.Padding = UDim.new(0, 6)
     listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
     local tabBtn = Instance.new("TextButton")
-    tabBtn.Size = UDim2.new(0, 78, 1, -4) tabBtn.BackgroundColor3 = tabColor
-    tabBtn.Text = iconText .. "\n" .. name tabBtn.TextColor3 = Color3.fromRGB(240, 240, 250)
+    tabBtn.Size = UDim2.new(0, 70, 1, -4) tabBtn.BackgroundColor3 = tabColor
+    tabBtn.Text = iconText .. " " .. name tabBtn.TextColor3 = Color3.fromRGB(240, 240, 250)
     tabBtn.TextSize, tabBtn.Font = 9, Enum.Font.GothamBold tabBtn.Parent = TopMenu
-    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 6)
     
     tabBtn.MouseButton1Click:Connect(function()
         for _, p in pairs(pages) do p.Visible = false end
@@ -167,16 +166,16 @@ local function createTab(name, iconText, tabColor)
     return page
 end
 
--- Вкладка ГЛАВНАЯ (NEWS)
+-- Вкладка ГЛАВНАЯ
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 300) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
 
 local homeBtn = Instance.new("TextButton")
-homeBtn.Size = UDim2.new(0, 78, 1, -4) homeBtn.BackgroundColor3 = Color3.fromRGB(70, 20, 110)
-homeBtn.Text = "🏠\nГЛАВНАЯ" homeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+homeBtn.Size = UDim2.new(0, 70, 1, -4) homeBtn.BackgroundColor3 = Color3.fromRGB(70, 20, 110)
+homeBtn.Text = "🏠 ГЛАВ" homeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 homeBtn.TextSize, homeBtn.Font = 9, Enum.Font.GothamBold homeBtn.Parent = TopMenu
-Instance.new("UICorner", homeBtn).CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", homeBtn).CornerRadius = UDim.new(0, 6)
 homeBtn.MouseButton1Click:Connect(function()
     for _, p in pairs(pages) do p.Visible = false end
     tabHome.Visible = true
@@ -192,7 +191,7 @@ local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB
 local NewsText = Instance.new("TextLabel")
 NewsText.Size = UDim2.new(1, -16, 1, -16) NewsText.Position = UDim2.new(0, 8, 0, 8)
 NewsText.BackgroundTransparency = 1 
-NewsText.Text = "• [v49.4 Elite] Все функции активированы!\n• 🎯 Зеленая кнопка — аим по игрокам\n• 🤖 Оранжевая кнопка — аим по ботам\n• 'N' — скрыть/показать меню\n• Полная поддержка ESP, Teleport & Utils"
+NewsText.Text = "• Меню и вкладки теперь сверху!\n• 🎯 Зеленая кнопка — аим по игрокам\n• 🤖 Оранжевая кнопка — аим по ботам\n• 'N' — скрыть/показать интерфейс\n• Полный набор ESP, Utils и Teleport"
 NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 10.5 NewsText.Font = Enum.Font.GothamMedium
 NewsText.TextXAlignment = Enum.TextXAlignment.Left NewsText.TextYAlignment = Enum.TextYAlignment.Top
 NewsText.TextWrapped = true NewsText.Parent = NewsBox
@@ -228,24 +227,20 @@ local function createToggle(page, name, callback)
     end)
 end
 
--- Вкладка ESP
+-- Создаем вкладки
 local tabESP = createTab("ESP", "👁️", Color3.fromRGB(15, 75, 45))
 createToggle(tabESP, "Boxes (Рамки)", function(v) Settings.ESP_Boxes = v end)
 createToggle(tabESP, "Names (Имена)", function(v) Settings.ESP_Names = v end)
 createToggle(tabESP, "Health (Здоровье)", function(v) Settings.ESP_Health = v end)
-createToggle(tabESP, "Distance (Дистанция)", function(v) Settings.ESP_Distance = v end)
 createToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
 
--- Вкладка AIM
 local tabAim = createTab("AIM", "🎯", Color3.fromRGB(90, 20, 45))
 createToggle(tabAim, "Aimbot (Аимбот)", function(v) Settings.Aimbot = v end)
 createToggle(tabAim, "HitBox Expander", function(v) Settings.HitBoxExpander = v end)
-createToggle(tabAim, "WallCheck", function(v) Settings.WallCheck = v end)
 
--- Вкладка ТЕЛЕПОРТ
-local tabTeleport = createTab("ТЕЛЕПОРТ", "📍", Color3.fromRGB(40, 80, 110))
+local tabTeleport = createTab("TP", "📍", Color3.fromRGB(40, 80, 110))
 local tpScroll = Instance.new("ScrollingFrame")
-tpScroll.Size = UDim2.new(1, 0, 1, 0) tpScroll.BackgroundTransparency = 1 tpScroll.CanvasSize = UDim2.new(0, 0, 0, 400) tpScroll.ScrollBarThickness = 3 tpScroll.Parent = tabTeleport
+tpScroll.Size = UDim2.new(1, 0, 1, 0) tpScroll.BackgroundTransparency = 1 tpScroll.CanvasSize = UDim2.new(0, 0, 0, 300) tpScroll.ScrollBarThickness = 3 tpScroll.Parent = tabTeleport
 
 local function refreshPlayerList()
     for _, child in ipairs(tpScroll:GetChildren()) do
@@ -275,13 +270,12 @@ end
 
 local refreshBtn = Instance.new("TextButton")
 refreshBtn.Size = UDim2.new(1, -4, 0, 32) refreshBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
-refreshBtn.Text = "  🔄 Обновить список игроков" refreshBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+refreshBtn.Text = "  🔄 Обновить список" refreshBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 refreshBtn.TextSize, refreshBtn.Font = 10, Enum.Font.GothamBold refreshBtn.TextXAlignment = Enum.TextXAlignment.Left refreshBtn.Parent = tabTeleport
 Instance.new("UICorner", refreshBtn).CornerRadius = UDim.new(0, 6)
 refreshBtn.MouseButton1Click:Connect(refreshPlayerList)
 refreshPlayerList()
 
--- Вкладка UTILS
 local tabUtils = createTab("UTILS", "⚙️", Color3.fromRGB(20, 40, 90))
 createToggle(tabUtils, "Speedhack", function(v) Settings.SpeedEnabled = v end)
 createToggle(tabUtils, "JumpPower", function(v) Settings.JumpPowerEnabled = v end)
@@ -290,7 +284,6 @@ createToggle(tabUtils, "Infinite Jump", function(v) Settings.InfiniteJump = v en
 createToggle(tabUtils, "Noclip", function(v) Settings.Noclip = v end)
 createToggle(tabUtils, "Fullbright", function(v) Settings.Fullbright = v if not v then Lighting.Brightness = 1 Lighting.GlobalShadows = true end end)
 
--- Вкладка EXTRA
 local tabExtra = createTab("EXTRA", "📦", Color3.fromRGB(100, 45, 15))
 createToggle(tabExtra, "GodMode (Бессмертие)", function(v) Settings.GodMode = v end)
 createToggle(tabExtra, "Anti-Void", function(v) Settings.AntiVoid = v end)
@@ -299,7 +292,7 @@ createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
 
--- Логика функционала
+-- Логика
 local mouse = LocalPlayer:GetMouse()
 mouse.Button1Down:Connect(function()
     pcall(function()
@@ -354,11 +347,9 @@ local function getClosestNPC()
     return target
 end
 
--- Визуальный ESP (через BillboardGui / Highlight для полной стабильности в Delta)
 local espCache = {}
 RunService.RenderStepped:Connect(function()
     pcall(function()
-        -- Аим
         if Settings.Aimbot then
             local t = getClosestPlayer()
             if t and t.Character and t.Character:FindFirstChild(Settings.AimPart) then
@@ -373,7 +364,6 @@ RunService.RenderStepped:Connect(function()
             end
         end
 
-        -- Персонаж
         local char = LocalPlayer.Character
         if char then
             local hum = char:FindFirstChildOfClass("Humanoid")
@@ -398,11 +388,9 @@ RunService.RenderStepped:Connect(function()
             Lighting.GlobalShadows = false
         end
 
-        -- Подсветка игроков (ESP Highlight)
         for _, p in ipairs(Players:GetPlayers()) do
             if p ~= LocalPlayer and p.Character then
                 local pChar = p.Character
-                local hum = pChar:FindFirstChildOfClass("Humanoid")
                 if Settings.ESP_Boxes or Settings.ESP_Names then
                     if not espCache[p] then
                         local hl = Instance.new("Highlight")
@@ -421,7 +409,6 @@ RunService.RenderStepped:Connect(function()
             end
         end
 
-        -- Хитбоксы
         for _, p in ipairs(Players:GetPlayers()) do
             if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
                 local rp = p.Character.HumanoidRootPart
@@ -437,4 +424,4 @@ RunService.RenderStepped:Connect(function()
     end)
 end)
 
-print("Nebula X v49.4 Elite: Все
+print("Nebula X Elite с верхним меню успешно запущен!")
