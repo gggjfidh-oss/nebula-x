@@ -211,9 +211,7 @@ Tog(A, "HitBox", "HitBoxExpander")
 Tog(A, "WallCheck", "WallCheck")
 
 Btn(A, "⚡ Скорость: [Быстро]", function()
-    if S.AntiVoid and rt and rt.Position.Y < -50 then 
-    rt.CFrame = rt.CFrame + Vector3.new(0, 100, 0) 
-        end
+    if S.Smoothness == 3 then
         S.Smoothness = 1.5
     elseif S.Smoothness == 1.5 then
         S.Smoothness = 6
@@ -548,16 +546,16 @@ R.RenderStepped:Connect(function(dt)
                 hm:ChangeState(Enum.HumanoidStateType.Jumping)
             end
             if S.WaterWalk and rt then
-                local r = workspace:Raycast(rt.Position, Vector3.new(0, -10, 0))
-                if r then
-                    rt.CFrame = rt.CFrame + Vector3.new(0, (r.Position.Y + 3) - rt.Position.Y, 0)
-                    rt.Velocity = Vector3.new(rt.Velocity.X, 0, rt.Velocity.Z)
-                end
-            end
-            if S.AntiVoid and rt and rt.Position.Y < -50 then
-                rt.CFrame = rt.CFrame + Vector3.new(0, 100
-        end
-            if S.Noclip then
+    local r = workspace:Raycast(rt.Position, Vector3.new(0, -10, 0))
+    if r then
+        rt.CFrame = rt.CFrame + Vector3.new(0, (r.Position.Y + 3) - rt.Position.Y, 0)
+        rt.Velocity = Vector3.new(rt.Velocity.X, 0, rt.Velocity.Z)
+    end
+end
+if S.AntiVoid and rt and rt.Position.Y < -50 then
+    rt.CFrame = rt.CFrame + Vector3.new(0, 100, 0)
+end
+if S.Noclip then
                 for _, p in pairs(ch:GetDescendants()) do
                     if p:IsA("BasePart") then
                         p.CanCollide = false
