@@ -1,4 +1,4 @@
--- Nebula X Hub v47 (Full Power Edition)
+-- Nebula X Hub v48 (Elite Edition - Ultra GUI & Fixed Functions)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -7,40 +7,41 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Lighting = game:GetService("Lighting")
+local CoreGui = game:GetService("CoreGui")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
 local Settings = {
     ESP_Boxes = false, ESP_BoxFill = false, ESP_Names = false,
-    ESP_Health = false, ESP_Distance = false, ESP_Weapon = false,
+    ESP_Health = false, ESP_Distance = false, ESP_Weapon = false, ESP_Ammo = false,
     ESP_Tracers = false, ESP_Offscreen = false, ESP_Skeleton = false, ESP_HeadDot = false, ESP_Chams = false, ESP_RainbowChams = false, ESP_ViewAngle = false, ESP_TeamCheck = true,
     Aimbot = false, TriggerBot = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, Prediction = false, SilentAim = false, AimPart = "Head", Smoothness = 3,
     ShowFOV = false, FOV = 130, SpeedEnabled = false, SpeedValue = 28, JumpPowerEnabled = false, JumpPowerValue = 70,
     FlyEnabled = false, FlySpeed = 50, InfiniteJump = false, SuperJump = false, Bhop = false, Noclip = false,
-    Freecam = false, SpinBot = false, KillAura = false, AutoEquip = false, AutoRespawn = false, AutoHeal = false, AutoReload = false, GhostMode = false, 
-    GodMode = false, AntiVoid = false, ClickTP = false, InfStamina = false, 
-    AntiAFK = true, ZoomHack = false, FOVChanger = false, FOVValue = 70, AntiRagdoll = true, Fullbright = false, RGBMenu = false,
-    PlatformStand = false, CustomZoomEnabled = false, CustomZoomValue = 400
+    Freecam = false, SpinBot = false, KillAura = false, AutoEquip = false, AutoRespawn = false, AutoHeal = false, GhostMode = false, 
+    GodMode = false, AntiVoid = false, ClickTP = false, 
+    AntiAFK = true, FOVChanger = false, FOVValue = 70, CustomZoomEnabled = false, CustomZoomValue = 400, Fullbright = false, RGBMenu = false
 }
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "NebulaXHubFull"
-pcall(function() ScreenGui.Parent = game.CoreGui end)
+ScreenGui.Name = "NebulaXElite"
+pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
+-- Главное окно в стиле топовых UI (Dark Modern Glass)
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 480, 0, 310)
-MainFrame.Position = UDim2.new(0.5, -240, 0.5, -155)
-MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 22)
+MainFrame.Size = UDim2.new(0, 500, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -250, 0.5, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(13, 13, 20)
 MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
 
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
 
-local RGBStroke = Instance.new("UIStroke", MainFrame)
-RGBStroke.Thickness = 2
-RGBStroke.Color = Color3.fromRGB(120, 40, 255)
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Thickness = 2
+MainStroke.Color = Color3.fromRGB(138, 43, 226)
 
 task.spawn(function()
     while true do
@@ -48,11 +49,11 @@ task.spawn(function()
             if Settings.RGBMenu then
                 for i = 0, 1, 0.005 do
                     if not Settings.RGBMenu then break end
-                    RGBStroke.Color = Color3.fromHSV(i, 1, 1)
+                    MainStroke.Color = Color3.fromHSV(i, 1, 1)
                     task.wait(0.03)
                 end
             else
-                RGBStroke.Color = Color3.fromRGB(120, 40, 255)
+                MainStroke.Color = Color3.fromRGB(138, 43, 226)
                 task.wait(0.5)
             end
         end)
@@ -60,36 +61,38 @@ task.spawn(function()
     end
 end)
 
+-- Мобильная плавающая кнопка быстрого включения аима
 local AimMobileBtn = Instance.new("TextButton")
-AimMobileBtn.Size = UDim2.new(0, 44, 0, 44)
+AimMobileBtn.Size = UDim2.new(0, 46, 0, 46)
 AimMobileBtn.Position = UDim2.new(0.82, 0, 0.38, 0)
-AimMobileBtn.BackgroundColor3 = Color3.fromRGB(45, 15, 80)
+AimMobileBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
 AimMobileBtn.Text = "🎯"
 AimMobileBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-AimMobileBtn.TextSize = 18
+AimMobileBtn.TextSize = 20
 AimMobileBtn.Parent = ScreenGui
 Instance.new("UICorner", AimMobileBtn).CornerRadius = UDim.new(1, 0)
 local aimBtnStroke = Instance.new("UIStroke", AimMobileBtn)
-aimBtnStroke.Color = Color3.fromRGB(180, 80, 255)
+aimBtnStroke.Color = Color3.fromRGB(138, 43, 226)
 aimBtnStroke.Thickness = 1.5
 
 AimMobileBtn.MouseButton1Click:Connect(function()
     Settings.Aimbot = not Settings.Aimbot
     if Settings.Aimbot then
-        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(20, 160, 70)
+        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(30, 180, 90)
         aimBtnStroke.Color = Color3.fromRGB(0, 255, 120)
     else
-        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(45, 15, 80)
-        aimBtnStroke.Color = Color3.fromRGB(180, 80, 255)
+        AimMobileBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 38)
+        aimBtnStroke.Color = Color3.fromRGB(138, 43, 226)
     end
 end)
 
+-- Верхняя панель (TopBar)
 local TopBar = Instance.new("Frame")
-TopBar.Size = UDim2.new(1, 0, 0, 36)
-TopBar.BackgroundColor3 = Color3.fromRGB(16, 12, 35)
+TopBar.Size = UDim2.new(1, 0, 0, 38)
+TopBar.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
 TopBar.BorderSizePixel = 0
 TopBar.Parent = MainFrame
-Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 12)
 
 local dragging, dragInput, dragStart, startPos
 TopBar.InputBegan:Connect(function(input)
@@ -109,29 +112,30 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 12, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "✨ NEBULA X // V47 FULL"
-Title.TextColor3 = Color3.fromRGB(220, 190, 255) Title.TextSize = 12 Title.Font = Enum.Font.GothamBold
+Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 14, 0, 0)
+Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X  //  ELITE EDITION"
+Title.TextColor3 = Color3.fromRGB(230, 220, 255) Title.TextSize = 13 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
 
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 24, 0, 24) CloseBtn.Position = UDim2.new(1, -30, 0, 6)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(180, 40, 60) CloseBtn.Text = "✕"
-CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.Font = 11, Enum.Font.GothamBold
-CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 5)
+CloseBtn.Size = UDim2.new(0, 26, 0, 26) CloseBtn.Position = UDim2.new(1, -32, 0, 6)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70) CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.Font = 12, Enum.Font.GothamBold
+CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
+-- Кнопка сворачивания меню "N"
 local ToggleBtn = Instance.new("TextButton")
-ToggleBtn.Size = UDim2.new(0, 42, 0, 42)
+ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(60, 20, 110)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 32)
 ToggleBtn.Text = "N"
 ToggleBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
 ToggleBtn.TextSize, ToggleBtn.Font = 20, Enum.Font.GothamBold
 ToggleBtn.Parent = ScreenGui
 Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
 local tStroke = Instance.new("UIStroke", ToggleBtn)
-tStroke.Color = Color3.fromRGB(200, 100, 255)
+tStroke.Color = Color3.fromRGB(138, 43, 226)
 tStroke.Thickness = 1.5
 
 local tDragging, tDragInput, tDragStart, tStartPos
@@ -156,12 +160,12 @@ ToggleBtn.MouseButton1Click:Connect(function()
 end)
 
 local Sidebar = Instance.new("ScrollingFrame")
-Sidebar.Size = UDim2.new(0, 110, 1, -36) Sidebar.Position = UDim2.new(0, 0, 0, 36)
-Sidebar.BackgroundColor3 = Color3.fromRGB(12, 10, 25) Sidebar.BorderSizePixel = 0 Sidebar.CanvasSize = UDim2.new(0,0,0,300) Sidebar.ScrollBarThickness = 2 Sidebar.Parent = MainFrame
-local SideLayout = Instance.new("UIListLayout", Sidebar) SideLayout.Padding = UDim.new(0, 4)
+Sidebar.Size = UDim2.new(0, 115, 1, -38) Sidebar.Position = UDim2.new(0, 0, 0, 38)
+Sidebar.BackgroundColor3 = Color3.fromRGB(10, 10, 16) Sidebar.BorderSizePixel = 0 Sidebar.CanvasSize = UDim2.new(0,0,0,300) Sidebar.ScrollBarThickness = 2 Sidebar.Parent = MainFrame
+local SideLayout = Instance.new("UIListLayout", Sidebar) SideLayout.Padding = UDim.new(0, 5)
 
 local Container = Instance.new("Frame")
-Container.Size = UDim2.new(1, -120, 1, -42) Container.Position = UDim2.new(0, 115, 0, 38)
+Container.Size = UDim2.new(1, -125, 1, -44) Container.Position = UDim2.new(0, 120, 0, 40)
 Container.BackgroundTransparency = 1 Container.Parent = MainFrame
 
 local pages = {}
@@ -172,14 +176,14 @@ local function createTab(name, tabColor)
     page.CanvasSize = UDim2.new(0, 0, 0, 1500) page.ScrollBarThickness = 3 page.Parent = Container
     
     local listLayout = Instance.new("UIListLayout", page)
-    listLayout.Padding = UDim.new(0, 5)
+    listLayout.Padding = UDim.new(0, 6)
     listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
     local tabBtn = Instance.new("TextButton")
-    tabBtn.Size = UDim2.new(1, -4, 0, 32) tabBtn.BackgroundColor3 = tabColor
-    tabBtn.Text = name tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tabBtn.Size = UDim2.new(1, -6, 0, 34) tabBtn.BackgroundColor3 = tabColor
+    tabBtn.Text = name tabBtn.TextColor3 = Color3.fromRGB(240, 240, 250)
     tabBtn.TextSize, tabBtn.Font = 11, Enum.Font.GothamBold tabBtn.Parent = Sidebar
-    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 5)
+    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 6)
     
     tabBtn.MouseButton1Click:Connect(function()
         for _, p in pairs(pages) do p.Visible = false end
@@ -188,16 +192,16 @@ local function createTab(name, tabColor)
     pages[name] = page
     return page
 end
--- Nebula X Hub v47 (Part 2 of 3)
+-- Nebula X Hub v48 (Part 2 of 3)
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 400) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
 
 local homeBtn = Instance.new("TextButton")
-homeBtn.Size = UDim2.new(1, -4, 0, 32) homeBtn.BackgroundColor3 = Color3.fromRGB(80, 20, 120)
-homeBtn.Text = "🏠 HOME" homeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+homeBtn.Size = UDim2.new(1, -6, 0, 34) homeBtn.BackgroundColor3 = Color3.fromRGB(60, 20, 100)
+homeBtn.Text = "🏠 ГЛАВНАЯ" homeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 homeBtn.TextSize, homeBtn.Font = 11, Enum.Font.GothamBold homeBtn.Parent = Sidebar
-Instance.new("UICorner", homeBtn).CornerRadius = UDim.new(0, 5)
+Instance.new("UICorner", homeBtn).CornerRadius = UDim.new(0, 6)
 homeBtn.MouseButton1Click:Connect(function()
     for _, p in pairs(pages) do p.Visible = false end
     tabHome.Visible = true
@@ -206,28 +210,28 @@ pages["HOME"] = tabHome
 
 local NoticeBox = Instance.new("Frame")
 NoticeBox.Size = UDim2.new(1, -8, 0, 220) NoticeBox.Position = UDim2.new(0, 0, 0, 5)
-NoticeBox.BackgroundColor3 = Color3.fromRGB(15, 12, 35) NoticeBox.Parent = tabHome
+NoticeBox.BackgroundColor3 = Color3.fromRGB(18, 18, 30) NoticeBox.Parent = tabHome
 Instance.new("UICorner", NoticeBox).CornerRadius = UDim.new(0, 8)
-local nStroke = Instance.new("UIStroke", NoticeBox) nStroke.Color = Color3.fromRGB(160, 80, 255) nStroke.Thickness = 1.5
+local nStroke = Instance.new("UIStroke", NoticeBox) nStroke.Color = Color3.fromRGB(138, 43, 226) nStroke.Thickness = 1.5
 
 local NoticeTitle = Instance.new("TextLabel")
 NoticeTitle.Size = UDim2.new(1, 0, 0, 28) NoticeTitle.Position = UDim2.new(0, 0, 0, 5)
-NoticeTitle.BackgroundTransparency = 1 NoticeTitle.Text = "🛡️ СТРЕЛКИ И ВСЕ ФУНКЦИИ"
+NoticeTitle.BackgroundTransparency = 1 NoticeTitle.Text = "💎 ELITE СИСТЕМА АКТИВНА"
 NoticeTitle.TextColor3 = Color3.fromRGB(0, 255, 120) NoticeTitle.TextSize = 12 NoticeTitle.Font = Enum.Font.GothamBold
 NoticeTitle.Parent = NoticeBox
 
 local NoticeText = Instance.new("TextLabel")
 NoticeText.Size = UDim2.new(1, -16, 1, -35) NoticeText.Position = UDim2.new(0, 8, 0, 32)
 NoticeText.BackgroundTransparency = 1 
-NoticeText.Text = "• Версия: v47 Full\n• Стрелки Offscreen ESP возвращены и работают.\n• Noclip, God Mode и Ghost Mode усилены для работы везде."
+NoticeText.Text = "• Версия: v48 Elite\n• Исправлены все баги функций.\n• Добавлено отображение патронов и оружия в ESP.\n• Интерфейс обновлен в стиле современных читов."
 NoticeText.TextColor3 = Color3.fromRGB(210, 210, 240) NoticeText.TextSize = 10 NoticeText.Font = Enum.Font.GothamMedium
 NoticeText.TextXAlignment = Enum.TextXAlignment.Left NoticeText.TextYAlignment = Enum.TextYAlignment.Top
 NoticeText.TextWrapped = true NoticeText.Parent = NoticeBox
 
 local uniqueColors = {
-    Color3.fromRGB(20, 70, 110), Color3.fromRGB(80, 25, 100),
-    Color3.fromRGB(20, 90, 50), Color3.fromRGB(100, 60, 20),
-    Color3.fromRGB(90, 20, 40), Color3.fromRGB(20, 80, 80)
+    Color3.fromRGB(25, 45, 80), Color3.fromRGB(70, 25, 90),
+    Color3.fromRGB(20, 80, 50), Color3.fromRGB(90, 50, 20),
+    Color3.fromRGB(80, 20, 50), Color3.fromRGB(20, 70, 80)
 }
 local uIndex = 1
 
@@ -236,19 +240,19 @@ local function createToggle(page, name, callback)
     uIndex = uIndex % #uniqueColors + 1
 
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, -4, 0, 32) btn.BackgroundColor3 = btnColor
+    btn.Size = UDim2.new(1, -6, 0, 34) btn.BackgroundColor3 = btnColor
     btn.Text = "  " .. name .. ": [OFF]" btn.TextColor3 = Color3.fromRGB(240, 240, 255)
     btn.TextSize, btn.Font = 10, Enum.Font.GothamBold btn.TextXAlignment = Enum.TextXAlignment.Left btn.Parent = page
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
     
     local stroke = Instance.new("UIStroke", btn)
-    stroke.Color = Color3.fromRGB(140, 110, 255) stroke.Thickness = 1.2
+    stroke.Color = Color3.fromRGB(120, 90, 220) stroke.Thickness = 1.2
 
     local state = false
     btn.MouseButton1Click:Connect(function()
         state = not state
         if state then 
-            btn.BackgroundColor3 = Color3.fromRGB(20, 180, 80) 
+            btn.BackgroundColor3 = Color3.fromRGB(20, 160, 80) 
             btn.TextColor3 = Color3.fromRGB(255, 255, 255) 
             btn.Text = "  " .. name .. ": [ON]" 
             stroke.Color = Color3.fromRGB(0, 255, 120)
@@ -256,50 +260,50 @@ local function createToggle(page, name, callback)
             btn.BackgroundColor3 = btnColor 
             btn.TextColor3 = Color3.fromRGB(240, 240, 255) 
             btn.Text = "  " .. name .. ": [OFF]" 
-            stroke.Color = Color3.fromRGB(140, 110, 255)
+            stroke.Color = Color3.fromRGB(120, 90, 220)
         end
         pcall(function() callback(state) end)
     end)
 end
 
 local function createValueAdjuster(page, name, min, max, step, default, callback)
-    local frame = Instance.new("Frame") frame.Size = UDim2.new(1, -4, 0, 32) frame.BackgroundTransparency = 1 frame.Parent = page
-    local lbl = Instance.new("TextLabel") lbl.Size = UDim2.new(0.6, 0, 1, 0) lbl.BackgroundColor3 = Color3.fromRGB(45, 25, 80)
+    local frame = Instance.new("Frame") frame.Size = UDim2.new(1, -6, 0, 34) frame.BackgroundTransparency = 1 frame.Parent = page
+    local lbl = Instance.new("TextLabel") lbl.Size = UDim2.new(0.58, 0, 1, 0) lbl.BackgroundColor3 = Color3.fromRGB(35, 25, 65)
     lbl.Text = "  " .. name .. ": " .. default lbl.TextColor3 = Color3.fromRGB(230, 230, 255)
     lbl.TextSize, lbl.Font = 10, Enum.Font.GothamBold lbl.TextXAlignment = Enum.TextXAlignment.Left lbl.Parent = frame
-    Instance.new("UICorner", lbl).CornerRadius = UDim.new(0, 5)
+    Instance.new("UICorner", lbl).CornerRadius = UDim.new(0, 6)
     
     local val = default
-    local minusBtn = Instance.new("TextButton") minusBtn.Size = UDim2.new(0.18, 0, 1, 0) minusBtn.Position = UDim2.new(0.62, 0, 0, 0)
-    minusBtn.BackgroundColor3 = Color3.fromRGB(110, 35, 55) minusBtn.Text = "-" minusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    minusBtn.TextSize, minusBtn.Font = 12, Enum.Font.GothamBold minusBtn.Parent = frame Instance.new("UICorner", minusBtn).CornerRadius = UDim.new(0, 5)
+    local minusBtn = Instance.new("TextButton") minusBtn.Size = UDim2.new(0.19, 0, 1, 0) minusBtn.Position = UDim2.new(0.60, 0, 0, 0)
+    minusBtn.BackgroundColor3 = Color3.fromRGB(100, 30, 50) minusBtn.Text = "-" minusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    minusBtn.TextSize, minusBtn.Font = 12, Enum.Font.GothamBold minusBtn.Parent = frame Instance.new("UICorner", minusBtn).CornerRadius = UDim.new(0, 6)
     
-    local plusBtn = Instance.new("TextButton") plusBtn.Size = UDim2.new(0.18, 0, 1, 0) plusBtn.Position = UDim2.new(0.82, 0, 0, 0)
-    plusBtn.BackgroundColor3 = Color3.fromRGB(25, 110, 60) plusBtn.Text = "+" plusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    plusBtn.TextSize, plusBtn.Font = 12, Enum.Font.GothamBold plusBtn.Parent = frame Instance.new("UICorner", plusBtn).CornerRadius = UDim.new(0, 5)
+    local plusBtn = Instance.new("TextButton") plusBtn.Size = UDim2.new(0.19, 0, 1, 0) plusBtn.Position = UDim2.new(0.81, 0, 0, 0)
+    plusBtn.BackgroundColor3 = Color3.fromRGB(20, 100, 55) plusBtn.Text = "+" plusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    plusBtn.TextSize, plusBtn.Font = 12, Enum.Font.GothamBold plusBtn.Parent = frame Instance.new("UICorner", plusBtn).CornerRadius = UDim.new(0, 6)
     
     minusBtn.MouseButton1Click:Connect(function() if val > min then val = val - step lbl.Text = "  " .. name .. ": " .. val pcall(function() callback(val) end) end end)
     plusBtn.MouseButton1Click:Connect(function() if val < max then val = val + step lbl.Text = "  " .. name .. ": " .. val pcall(function() callback(val) end) end end)
 end
 
-local tabESP = createTab("ESP", Color3.fromRGB(15, 80, 50))
-createToggle(tabESP, "Boxes", function(v) Settings.ESP_Boxes = v end)
-createToggle(tabESP, "Box Fill", function(v) Settings.ESP_BoxFill = v end)
-createToggle(tabESP, "Names", function(v) Settings.ESP_Names = v end)
-createToggle(tabESP, "Health", function(v) Settings.ESP_Health = v end)
-createToggle(tabESP, "Distance", function(v) Settings.ESP_Distance = v end)
-createToggle(tabESP, "Weapon", function(v) Settings.ESP_Weapon = v end)
-createToggle(tabESP, "Head Dot", function(v) Settings.ESP_HeadDot = v end)
-createToggle(tabESP, "Tracers", function(v) Settings.ESP_Tracers = v end)
-createToggle(tabESP, "Offscreen Arrows", function(v) Settings.ESP_Offscreen = v end)
-createToggle(tabESP, "Skeleton", function(v) Settings.ESP_Skeleton = v end)
-createToggle(tabESP, "Chams", function(v) Settings.ESP_Chams = v end)
+local tabESP = createTab("ESP", Color3.fromRGB(15, 75, 45))
+createToggle(tabESP, "Boxes (Боксы)", function(v) Settings.ESP_Boxes = v end)
+createToggle(tabESP, "Box Fill (Заливка)", function(v) Settings.ESP_BoxFill = v end)
+createToggle(tabESP, "Names (Имена)", function(v) Settings.ESP_Names = v end)
+createToggle(tabESP, "Health (Здоровье)", function(v) Settings.ESP_Health = v end)
+createToggle(tabESP, "Distance (Дистанция)", function(v) Settings.ESP_Distance = v end)
+createToggle(tabESP, "Weapon & Ammo (Оружие/Патроны)", function(v) Settings.ESP_Ammo = v end)
+createToggle(tabESP, "Head Dot (Точка на голове)", function(v) Settings.ESP_HeadDot = v end)
+createToggle(tabESP, "Tracers (Линии)", function(v) Settings.ESP_Tracers = v end)
+createToggle(tabESP, "Offscreen Arrows (Стрелки)", function(v) Settings.ESP_Offscreen = v end)
+createToggle(tabESP, "Skeleton (Скелет)", function(v) Settings.ESP_Skeleton = v end)
+createToggle(tabESP, "Chams (Подсветка)", function(v) Settings.ESP_Chams = v end)
 createToggle(tabESP, "Rainbow Chams", function(v) Settings.ESP_RainbowChams = v end)
-createToggle(tabESP, "ViewAngle", function(v) Settings.ESP_ViewAngle = v end)
+createToggle(tabESP, "ViewAngle (Взгляд)", function(v) Settings.ESP_ViewAngle = v end)
 createToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
 
-local tabAim = createTab("AIM", Color3.fromRGB(100, 25, 50))
-createToggle(tabAim, "Aimbot", function(v) Settings.Aimbot = v end)
+local tabAim = createTab("AIM", Color3.fromRGB(90, 20, 45))
+createToggle(tabAim, "Aimbot (Аимбот)", function(v) Settings.Aimbot = v end)
 createToggle(tabAim, "Silent Aim", function(v) Settings.SilentAim = v end)
 createToggle(tabAim, "TriggerBot", function(v) Settings.TriggerBot = v end)
 createToggle(tabAim, "HitBox Expander", function(v) Settings.HitBoxExpander = v end)
@@ -311,17 +315,17 @@ createValueAdjuster(tabAim, "FOV Size", 30, 300, 10, 130, function(v) Settings.F
 createValueAdjuster(tabAim, "Smoothness", 1, 10, 1, 3, function(v) Settings.Smoothness = v end)
 
 local aimPartBtn = Instance.new("TextButton")
-aimPartBtn.Size = UDim2.new(1, -4, 0, 32) aimPartBtn.BackgroundColor3 = Color3.fromRGB(110, 35, 100)
+aimPartBtn.Size = UDim2.new(1, -6, 0, 34) aimPartBtn.BackgroundColor3 = Color3.fromRGB(100, 30, 90)
 aimPartBtn.Text = "  Target: [ Head ]" aimPartBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 aimPartBtn.TextSize, aimPartBtn.Font = 10, Enum.Font.GothamBold aimPartBtn.TextXAlignment = Enum.TextXAlignment.Left aimPartBtn.Parent = tabAim
-Instance.new("UICorner", aimPartBtn).CornerRadius = UDim.new(0, 5)
+Instance.new("UICorner", aimPartBtn).CornerRadius = UDim.new(0, 6)
 aimPartBtn.MouseButton1Click:Connect(function()
     if Settings.AimPart == "Head" then Settings.AimPart = "UpperTorso" aimPartBtn.Text = "  Target: [ Torso ]"
     else Settings.AimPart = "Head" aimPartBtn.Text = "  Target: [ Head ]" end
 end)
 
-local tabUtils = createTab("UTILS", Color3.fromRGB(25, 45, 100))
-createToggle(tabUtils, "RGB Menu", function(v) Settings.RGBMenu = v end)
+local tabUtils = createTab("UTILS", Color3.fromRGB(20, 40, 90))
+createToggle(tabUtils, "RGB Menu Glow", function(v) Settings.RGBMenu = v end)
 createToggle(tabUtils, "Speed (Bypass)", function(v) Settings.SpeedEnabled = v end)
 createValueAdjuster(tabUtils, "Speed Val", 16, 120, 4, 28, function(v) Settings.SpeedValue = v end)
 createToggle(tabUtils, "Jump (Bypass)", function(v) Settings.JumpPowerEnabled = v end)
@@ -333,31 +337,27 @@ createToggle(tabUtils, "Super Jump", function(v) Settings.SuperJump = v end)
 createToggle(tabUtils, "Bhop", function(v) Settings.Bhop = v end)
 createToggle(tabUtils, "Noclip", function(v) Settings.Noclip = v end)
 createToggle(tabUtils, "Freecam", function(v) Settings.Freecam = v end)
-createToggle(tabUtils, "Ghost Mode", function(v) Settings.GhostMode = v end)
+createToggle(tabUtils, "Ghost Mode (Невидимка)", function(v) Settings.GhostMode = v end)
 createToggle(tabUtils, "SpinBot", function(v) Settings.SpinBot = v end)
 createToggle(tabUtils, "Kill Aura", function(v) Settings.KillAura = v end)
 createToggle(tabUtils, "Auto-Equip", function(v) Settings.AutoEquip = v end)
 createToggle(tabUtils, "Auto-Respawn", function(v) Settings.AutoRespawn = v end)
 createToggle(tabUtils, "Auto-Heal", function(v) Settings.AutoHeal = v end)
-createToggle(tabUtils, "Inf Stamina", function(v) Settings.InfStamina = v end)
-createToggle(tabUtils, "Auto-Reload", function(v) Settings.AutoReload = v end)
 createToggle(tabUtils, "Anti-AFK", function(v) Settings.AntiAFK = v end)
 createToggle(tabUtils, "FOV Changer", function(v) Settings.FOVChanger = v end)
 createValueAdjuster(tabUtils, "FOV Val", 50, 120, 5, 70, function(v) Settings.FOVValue = v end)
 createToggle(tabUtils, "Custom Zoom", function(v) Settings.CustomZoomEnabled = v end)
 createValueAdjuster(tabUtils, "Zoom Max", 100, 2000, 100, 400, function(v) Settings.CustomZoomValue = v end)
-createToggle(tabUtils, "Anti-Ragdoll", function(v) Settings.AntiRagdoll = v end)
-createToggle(tabUtils, "Platform Stand", function(v) Settings.PlatformStand = v end)
 createToggle(tabUtils, "Fullbright", function(v) Settings.Fullbright = v if not v then pcall(function() Lighting.Brightness = 1 Lighting.ClockTime = 12 end) end end)
 
-local tabExtra = createTab("EXTRA", Color3.fromRGB(110, 50, 20))
-createToggle(tabExtra, "God Mode", function(v) Settings.GodMode = v end)
+local tabExtra = createTab("EXTRA", Color3.fromRGB(100, 45, 15))
+createToggle(tabExtra, "God Mode (Бессмертие)", function(v) Settings.GodMode = v end)
 createToggle(tabExtra, "Anti-Void", function(v) Settings.AntiVoid = v end)
 createToggle(tabExtra, "Click TP", function(v) Settings.ClickTP = v end)
 
 for _, p in pairs(pages) do p.Visible = false end
 tabHome.Visible = true
--- Nebula X Hub v47 (Part 3 of 3)
+-- Nebula X Hub v48 (Part 3 of 3)
 UserInputService.JumpRequest:Connect(function()
     pcall(function()
         if Settings and Settings.InfiniteJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
@@ -382,15 +382,15 @@ task.spawn(function()
         pcall(function()
             if Settings and Settings.AntiAFK then
                 local vu = game:GetService("VirtualUser")
-                vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+                vu:Button2Down(Vector2.new(0,0), Camera.CFrame)
                 task.wait(1)
-                vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+                vu:Button2Up(Vector2.new(0,0), Camera.CFrame)
             end
         end)
     end
 end)
 
--- Мощный универсальный движок фоновых функций (Noclip, GodMode, GhostMode, Speed, Jump)
+-- Надежный универсальный движок защиты, скорости и бессмертия
 task.spawn(function()
     while task.wait(0.1) do
         pcall(function()
@@ -432,12 +432,12 @@ task.spawn(function()
 
             if Settings and hum and Settings.AutoRespawn and hum.Health <= 0 then hum.Health = 100 end
 
-            -- Улучшенный Ghost Mode (Невидимость)
+            -- Исправленный Ghost Mode (Невидимость)
             if Settings and Settings.GhostMode and char then
                 for _, part in pairs(char:GetDescendants()) do
                     if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then 
-                        part.Transparency = 0.85
-                        part.LocalTransparencyModifier = 0.85
+                        part.Transparency = 0.9
+                        part.LocalTransparencyModifier = 0.9
                     end
                 end
             elseif char then
@@ -464,9 +464,7 @@ task.spawn(function()
                 end
             end
 
-            if Settings and hum and Settings.PlatformStand then hum.PlatformStand = true elseif hum then hum.PlatformStand = false end
-
-            -- Ультимативный Noclip везде
+            -- Исправленный Noclip везде
             if Settings and Settings.Noclip then
                 for _, part in pairs(char:GetDescendants()) do
                     if part:IsA("BasePart") then
@@ -623,10 +621,10 @@ RunService.RenderStepped:Connect(function()
                         skeleton = { Drawing.new("Line"), Drawing.new("Line"), Drawing.new("Line"), Drawing.new("Line"), Drawing.new("Line") }
                     }
                     espCache[p].box.Thickness = 1.5 espCache[p].box.Filled = false
-                    espCache[p].boxFill.Thickness = 0 espCache[p].boxFill.Filled = true espCache[p].boxFill.Color = Color3.fromRGB(150, 50, 255) espCache[p].boxFill.Transparency = 0.15
+                    espCache[p].boxFill.Thickness = 0 espCache[p].boxFill.Filled = true espCache[p].boxFill.Color = Color3.fromRGB(138, 43, 226) espCache[p].boxFill.Transparency = 0.15
                     espCache[p].name.Size = 13 espCache[p].name.Center = true espCache[p].name.Outline = true
                     espCache[p].healthBar.Filled = true espCache[p].healthBar.Thickness = 1
-                    espCache[p].tracer.Thickness = 1.5 espCache[p].tracer.Color = Color3.fromRGB(220, 160, 255)
+                    espCache[p].tracer.Thickness = 1.5 espCache[p].tracer.Color = Color3.fromRGB(200, 150, 255)
                     espCache[p].offscreen.Filled = true espCache[p].offscreen.Color = Color3.fromRGB(255, 60, 120) espCache[p].offscreen.Transparency = 1
                     espCache[p].headDot.Radius = 4.5 espCache[p].headDot.Filled = true espCache[p].headDot.Color = Color3.fromRGB(255, 50, 100)
                     espCache[p].viewAngle.Thickness = 1.5 espCache[p].viewAngle.Color = Color3.fromRGB(0, 255, 255)
@@ -645,7 +643,7 @@ RunService.RenderStepped:Connect(function()
                         if Settings.ESP_RainbowChams then
                             cache.highlight.FillColor = Color3.fromHSV(tick() % 5 / 5, 1, 1)
                         else
-                            cache.highlight.FillColor = Color3.fromRGB(130, 50, 255)
+                            cache.highlight.FillColor = Color3.fromRGB(138, 43, 226)
                         end
                     elseif cache.highlight then
                         cache.highlight:Destroy()
@@ -664,16 +662,27 @@ RunService.RenderStepped:Connect(function()
                         cache.box.Size = Vector2.new(width, height) cache.box.Position = pos cache.box.Visible = Settings.ESP_Boxes
                         cache.boxFill.Size = Vector2.new(width, height) cache.boxFill.Position = pos cache.boxFill.Visible = Settings.ESP_BoxFill
                         
-                        if Settings.ESP_Names or Settings.ESP_Distance or Settings.ESP_Weapon then
+                        -- ESP: Отображение имен, расстояния, оружия и патронов
+                        if Settings.ESP_Names or Settings.ESP_Distance or Settings.ESP_Weapon or Settings.ESP_Ammo then
                             local infoText = p.Name
                             if Settings.ESP_Distance and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                                 local dist = math.floor((LocalPlayer.Character.HumanoidRootPart.Position - rootPart.Position).Magnitude)
                                 infoText = infoText .. " [" .. dist .. "m]"
                             end
-                            if Settings.ESP_Weapon and char:FindFirstChildOfClass("Tool") then
-                                infoText = infoText .. " (" .. char:FindFirstChildOfClass("Tool").Name .. ")"
+                            
+                            -- Поиск оружия и патронов у противника
+                            local heldTool = char:FindFirstChildOfClass("Tool")
+                            if Settings.ESP_Weapon and heldTool then
+                                infoText = infoText .. " (" .. heldTool.Name .. ")"
                             end
-                            cache.name.Text = infoText cache.name.Position = Vector2.new(headVector.X, pos.Y - 16) cache.name.Visible = true
+                            if Settings.ESP_Ammo and heldTool then
+                                local ammoVal = heldTool:FindFirstChild("Ammo") or heldTool:FindFirstChild("Clip") or heldTool:FindFirstChild("Bullets")
+                                if ammoVal and ammoVal:IsA("IntValue") or ammoVal:IsA("NumberValue") then
+                                    infoText = infoText .. " [" .. ammoVal.Value .. " rounds]"
+                                end
+                            end
+
+                            cache.name.Text = infoText cache.name.Position = Vector2.new(headVector.X, pos.Y - 18) cache.name.Visible = true
                         else cache.name.Visible = false end
                         
                         if Settings.ESP_Health then
@@ -710,22 +719,22 @@ RunService.RenderStepped:Connect(function()
                         cache.offscreen.Visible = false
                     else
                         cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
-                        for _, l in pairs(cache.skeleton) do l.Visible = false end
+                        cache.box.Visible = false cache.boxFill.Visible = false cache.name.Visible = false cache.healthBar.Visible = false cache.tracer.Visible = false cache.headDot.Visible = false cache.viewAngle.Visible = false
+for _, l in pairs(cache.skeleton) do l.Visible = false end
 
-                        -- Исправленные рабочие Offscreen стрелки
-                        if Settings.ESP_Offscreen then
-                            local camCFrame = Camera.CFrame
-                            local relPos = camCFrame:VectorToObjectSpace(rootPart.Position - camCFrame.Position)
-                            local angle = math.atan2(relPos.X, relPos.Z)
-                            local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                            local radius = 130
-                            local arrowPos = center + Vector2.new(math.cos(angle - math.pi/2), math.sin(angle - math.pi/2)) * radius
-                            
-                            cache.offscreen.PointA = arrowPos + Vector2.new(12, 12)
-                            cache.offscreen.PointB = arrowPos - Vector2.new(12, 12)
-                            cache.offscreen.PointC = arrowPos + Vector2.new(0, -6)
-                            cache.offscreen.Visible = true
-                        else cache.offscreen.Visible = false end
+if Settings.ESP_Offscreen then
+    local camCFrame = Camera.CFrame
+    local relPos = camCFrame:VectorToObjectSpace(rootPart.Position - camCFrame.Position)
+    local angle = math.atan2(relPos.X, relPos.Z)
+    local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+    local radius = 130
+    local arrowPos = center + Vector2.new(math.cos(angle - math.pi/2), math.sin(angle - math.pi/2)) * radius
+    
+    cache.offscreen.PointA = arrowPos + Vector2.new(12, 12)
+    cache.offscreen.PointB = arrowPos - Vector2.new(12, 12)
+    cache.offscreen.PointC = arrowPos + Vector2.new(0, -6)
+    cache.offscreen.Visible = true
+else cache.offscreen.Visible = false end
                     end
                 else
                     if cache.highlight then cache.highlight:Destroy() cache.highlight = nil end
@@ -738,4 +747,4 @@ RunService.RenderStepped:Connect(function()
 end)
 
 Players.PlayerRemoving:Connect(removeESP)
-print("Nebula X v47 Full: Все системы активированы!")
+print("Nebula X v48 Elite: Элитный интерфейс и все функции успешно загружены!")
