@@ -388,7 +388,7 @@ R.RenderStepped:Connect(function(dt)
             end
         end
 
-                local ch = LP.Character
+                    local ch = LP.Character
         if ch then
             local hm = ch:FindFirstChildOfClass("Humanoid")
             local rt = ch:FindFirstChild("HumanoidRootPart")
