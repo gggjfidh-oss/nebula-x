@@ -1,4 +1,4 @@
--- Nebula X v49.4 Elite (Draggable UI & Buttons Version)
+-- Nebula X v49.4 Elite (Ultimate Expanded Full Features & Draggable UI)
 if getgenv and getgenv().LoadedCheat then
     pcall(function() getgenv().LoadedCheat:Disconnect() end)
 end
@@ -14,7 +14,8 @@ local LocalPlayer = Players.LocalPlayer
 local Settings = {
     ESP_Boxes = false, ESP_Names = false, ESP_Health = false, ESP_Distance = false, ESP_TeamCheck = true,
     Aimbot = false, AimBotNPC = false, HitBoxExpander = false, HitBoxSize = 4, WallCheck = false, AimPart = "Head", Smoothness = 3, FOV = 130,
-    SpeedEnabled = false, JumpPowerEnabled = false, FlyEnabled = false, InfiniteJump = false, Noclip = false,
+    SpeedEnabled = false, SpeedValue = 28, JumpPowerEnabled = false, JumpPowerValue = 70,
+    FlyEnabled = false, FlySpeed = 50, InfiniteJump = false, Noclip = false,
     GodMode = false, AntiVoid = false, ClickTP = false, Fullbright = false
 }
 
@@ -24,44 +25,32 @@ pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Функция для перетаскивания любых элементов (GUI / Кнопок)
+-- Функция перетаскивания (меню и кнопки)
 local function makeDraggable(guiObject)
     local dragging, dragInput, dragStart, startPos
-    
     guiObject.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
             dragStart = input.Position
             startPos = guiObject.Position
-            
             input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
             end)
         end
     end)
-    
     guiObject.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
             dragInput = input
         end
     end)
-    
     UserInputService.InputChanged:Connect(function(input)
         if input == dragInput and dragging then
             local delta = input.Position - dragStart
-            guiObject.Position = UDim2.new(
-                startPos.X.Scale, 
-                startPos.X.Offset + delta.X, 
-                startPos.Y.Scale, 
-                startPos.Y.Offset + delta.Y
-            )
+            guiObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
         end
     end)
 end
 
--- Главное меню (перетаскиваемое)
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 520, 0, 360)
 MainFrame.Position = UDim2.new(0.5, -260, 0.5, -180)
@@ -73,10 +62,9 @@ Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 14)
 local MainStroke = Instance.new("UIStroke", MainFrame)
 MainStroke.Thickness = 2
 MainStroke.Color = Color3.fromRGB(220, 80, 255)
+makeDraggable(MainFrame)
 
-makeDraggable(MainFrame) -- Делаем меню двигающимся
-
--- Кнопка открытия/скрытия ("N") — тоже двигается
+-- Кнопка "N" (Скрытие меню)
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 44, 0, 44)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 100)
@@ -87,16 +75,11 @@ ToggleBtn.TextSize, ToggleBtn.Font = 20, Enum.Font.GothamBold
 ToggleBtn.Parent = ScreenGui
 Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
 local tStroke = Instance.new("UIStroke", ToggleBtn)
-tStroke.Color = Color3.fromRGB(220, 80, 255)
-tStroke.Thickness = 1.5
-
+tStroke.Color = Color3.fromRGB(220, 80, 255) tStroke.Thickness = 1.5
 makeDraggable(ToggleBtn)
+ToggleBtn.MouseButton1Click:Connect(function() MainFrame.Visible = not MainFrame.Visible end)
 
-ToggleBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = not MainFrame.Visible
-end)
-
--- Аим по игрокам (🎯) — перетаскиваемая кнопка
+-- Кнопка Аима по игрокам (🎯)
 local AimMobileBtn = Instance.new("TextButton")
 AimMobileBtn.Size = UDim2.new(0, 44, 0, 44)
 AimMobileBtn.Position = UDim2.new(0.85, 0, 0.30, 0)
@@ -107,11 +90,8 @@ AimMobileBtn.TextSize = 18
 AimMobileBtn.Parent = ScreenGui
 Instance.new("UICorner", AimMobileBtn).CornerRadius = UDim.new(1, 0)
 local aimBtnStroke = Instance.new("UIStroke", AimMobileBtn)
-aimBtnStroke.Color = Color3.fromRGB(0, 255, 120)
-aimBtnStroke.Thickness = 1.5
-
+aimBtnStroke.Color = Color3.fromRGB(0, 255, 120) aimBtnStroke.Thickness = 1.5
 makeDraggable(AimMobileBtn)
-
 AimMobileBtn.MouseButton1Click:Connect(function()
     Settings.Aimbot = not Settings.Aimbot
     if Settings.Aimbot then
@@ -123,7 +103,7 @@ AimMobileBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Аим по ботам (🤖) — перетаскиваемая кнопка
+-- Кнопка Аима по ботам (🤖)
 local AimNPCBtn = Instance.new("TextButton")
 AimNPCBtn.Size = UDim2.new(0, 44, 0, 44)
 AimNPCBtn.Position = UDim2.new(0.85, 0, 0.45, 0)
@@ -134,11 +114,8 @@ AimNPCBtn.TextSize = 18
 AimNPCBtn.Parent = ScreenGui
 Instance.new("UICorner", AimNPCBtn).CornerRadius = UDim.new(0, 10)
 local aimNPCStroke = Instance.new("UIStroke", AimNPCBtn)
-aimNPCStroke.Color = Color3.fromRGB(255, 140, 0)
-aimNPCStroke.Thickness = 1.5
-
+aimNPCStroke.Color = Color3.fromRGB(255, 140, 0) aimNPCStroke.Thickness = 1.5
 makeDraggable(AimNPCBtn)
-
 AimNPCBtn.MouseButton1Click:Connect(function()
     Settings.AimBotNPC = not Settings.AimBotNPC
     if Settings.AimBotNPC then
@@ -150,7 +127,7 @@ AimNPCBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Верхняя панель меню
+-- Шапка меню
 local TopBar = Instance.new("Frame")
 TopBar.Size = UDim2.new(1, 0, 0, 32)
 TopBar.BackgroundColor3 = Color3.fromRGB(22, 18, 35)
@@ -160,7 +137,7 @@ Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 14)
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0) Title.Position = UDim2.new(0, 14, 0, 0)
-Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X // DRAGGABLE"
+Title.BackgroundTransparency = 1 Title.Text = "🔮  NEBULA X // ULTIMATE COMPLETE"
 Title.TextColor3 = Color3.fromRGB(240, 220, 255) Title.TextSize = 11 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left Title.Parent = TopBar
 
@@ -171,7 +148,7 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255) CloseBtn.TextSize, CloseBtn.
 CloseBtn.Parent = TopBar Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- Верхнее меню вкладок
+-- Верхние вкладки
 local TopMenu = Instance.new("Frame")
 TopMenu.Size = UDim2.new(1, 0, 0, 42) TopMenu.Position = UDim2.new(0, 0, 0, 32)
 TopMenu.BackgroundColor3 = Color3.fromRGB(20, 15, 30) TopMenu.BorderSizePixel = 0 TopMenu.Parent = MainFrame
@@ -191,7 +168,7 @@ local pages = {}
 local function createTab(name, iconText, tabColor)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.new(1, 0, 1, 0) page.BackgroundTransparency = 1 page.Visible = false
-    page.CanvasSize = UDim2.new(0, 0, 0, 600) page.ScrollBarThickness = 3 page.Parent = Container
+    page.CanvasSize = UDim2.new(0, 0, 0, 950) page.ScrollBarThickness = 3 page.Parent = Container
     
     local listLayout = Instance.new("UIListLayout", page)
     listLayout.Padding = UDim.new(0, 6)
@@ -211,7 +188,7 @@ local function createTab(name, iconText, tabColor)
     return page
 end
 
--- Вкладка HOME
+-- Вкладка ГЛАВНАЯ
 local tabHome = Instance.new("ScrollingFrame")
 tabHome.Size = UDim2.new(1, 0, 1, 0) tabHome.BackgroundTransparency = 1 tabHome.Visible = true
 tabHome.CanvasSize = UDim2.new(0, 0, 0, 300) tabHome.ScrollBarThickness = 3 tabHome.Parent = Container
@@ -236,7 +213,7 @@ local nStroke = Instance.new("UIStroke", NewsBox) nStroke.Color = Color3.fromRGB
 local NewsText = Instance.new("TextLabel")
 NewsText.Size = UDim2.new(1, -16, 1, -16) NewsText.Position = UDim2.new(0, 8, 0, 8)
 NewsText.BackgroundTransparency = 1 
-NewsText.Text = "• Теперь меню и кнопки Аима ДВИГАЕМЫЕ!\n• Зажми и потяни палец на меню или кнопках.\n• 🎯 Аим по игрокам | 🤖 Аим по ботам\n• Полный функционал активен."
+NewsText.Text = "• [v49.4 Ultimate] Полный набор функций возвращен!\n• Вкладки AIM, ESP, UTILS, EXTRA настроены полностью.\n• Интерфейс и кнопки аима полностью перетаскиваются."
 NewsText.TextColor3 = Color3.fromRGB(210, 210, 240) NewsText.TextSize = 10.5 NewsText.Font = Enum.Font.GothamMedium
 NewsText.TextXAlignment = Enum.TextXAlignment.Left NewsText.TextYAlignment = Enum.TextYAlignment.Top
 NewsText.TextWrapped = true NewsText.Parent = NewsBox
@@ -253,8 +230,7 @@ local function createToggle(page, name, callback)
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
     
     local stroke = Instance.new("UIStroke", btn)
-    stroke.Color = Color3.fromRGB(180, 100, 255)
-    stroke.Thickness = 1.2
+    stroke.Color = Color3.fromRGB(180, 100, 255) stroke.Thickness = 1.2
 
     local state = false
     btn.MouseButton1Click:Connect(function()
@@ -284,7 +260,22 @@ createToggle(tabESP, "Team Check", function(v) Settings.ESP_TeamCheck = v end)
 local tabAim = createTab("AIM", "🎯", Color3.fromRGB(90, 20, 45))
 createToggle(tabAim, "Aimbot (Аимбот)", function(v) Settings.Aimbot = v end)
 createToggle(tabAim, "HitBox Expander", function(v) Settings.HitBoxExpander = v end)
-createToggle(tabAim, "WallCheck", function(v) Settings.WallCheck = v end)
+createToggle(tabAim, "WallCheck (Проверка стен)", function(v) Settings.WallCheck = v end)
+
+local aimPartBtn = Instance.new("TextButton")
+aimPartBtn.Size = UDim2.new(1, -4, 0, 32) aimPartBtn.BackgroundColor3 = Color3.fromRGB(35, 25, 50)
+aimPartBtn.Text = "  🎯 Цель аима: [Голова (Head)]" aimPartBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+aimPartBtn.TextSize, aimPartBtn.Font = 10, Enum.Font.GothamBold aimPartBtn.TextXAlignment = Enum.TextXAlignment.Left aimPartBtn.Parent = tabAim
+Instance.new("UICorner", aimPartBtn).CornerRadius = UDim.new(0, 6)
+aimPartBtn.MouseButton1Click:Connect(function()
+    if Settings.AimPart == "Head" then
+        Settings.AimPart = "HumanoidRootPart"
+        aimPartBtn.Text = "  🎯 Цель аима: [Торс (RootPart)]"
+    else
+        Settings.AimPart = "Head"
+        aimPartBtn.Text = "  🎯 Цель аима: [Голова (Head)]"
+    end
+end)
 
 -- Вкладка ТЕЛЕПОРТ
 local tabTeleport = createTab("TP", "📍", Color3.fromRGB(40, 80, 110))
@@ -325,7 +316,7 @@ Instance.new("UICorner", refreshBtn).CornerRadius = UDim.new(0, 6)
 refreshBtn.MouseButton1Click:Connect(refreshPlayerList)
 refreshPlayerList()
 
--- Вкладка UTILS
+-- Вкладка UTILS (Полная)
 local tabUtils = createTab("UTILS", "⚙️", Color3.fromRGB(20, 40, 90))
 createToggle(tabUtils, "Speedhack (Ускорение)", function(v) Settings.SpeedEnabled = v end)
 createToggle(tabUtils, "JumpPower (Высокий прыжок)", function(v) Settings.JumpPowerEnabled = v end)
@@ -431,6 +422,13 @@ RunService.RenderStepped:Connect(function()
         if Settings.AimBotNPC then
             local npcPart = getClosestNPC()
             if npcPart then
+                Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, t.Character[Settings.AimPart].Position), 1 / Settings.Smoothness)
+            end
+        end
+
+        if Settings.AimBotNPC then
+            local npcPart = getClosestNPC()
+            if npcPart then
                 Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, npcPart.Position), 1 / Settings.Smoothness)
             end
         end
@@ -441,9 +439,9 @@ RunService.RenderStepped:Connect(function()
             local root = char:FindFirstChild("HumanoidRootPart")
             
             if Settings.SpeedEnabled and hum and root and hum.MoveDirection.Magnitude > 0 then
-                root.CFrame = root.CFrame + (hum.MoveDirection * 0.5)
+                root.CFrame = root.CFrame + (hum.MoveDirection * (Settings.SpeedValue / 50))
             end
-            if Settings.JumpPowerEnabled and hum then hum.JumpPower = 100 end
+            if Settings.JumpPowerEnabled and hum then hum.JumpPower = Settings.JumpPowerValue end
             if Settings.GodMode and hum then hum.MaxHealth = math.huge hum.Health = math.huge end
             if Settings.AntiVoid and root and root.Position.Y < -50 then root.CFrame = root.CFrame + Vector3.new(0, 100, 0) end
             if Settings.Noclip then
@@ -495,4 +493,4 @@ RunService.RenderStepped:Connect(function()
     end)
 end)
 
-print("Nebula X Elite: Двигающиеся кнопки и полный функционал активированы!")
+print("Nebula X Elite: Полная расширенная версия со всеми вкладками активна!")
